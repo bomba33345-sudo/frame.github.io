@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <title>Mono.Musiс</title>
+  <title>Mono.Music</title>
   <style>
     :root {
       --bg-main: #000000;
@@ -24,7 +24,6 @@
       --radius-xl: 32px;
       --radius-lg: 20px;
       --radius-md: 14px;
-      --radius-sm: 8px;
     }
 
     body.theme-light {
@@ -47,7 +46,7 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
@@ -69,7 +68,6 @@
       position: relative;
     }
 
-    /* Шапка */
     .top-bar {
       padding: 16px 20px;
       background: var(--bg-glass);
@@ -92,7 +90,6 @@
       font-size: 24px;
       font-weight: 900;
       letter-spacing: -1px;
-      color: var(--text-main);
       text-transform: uppercase;
     }
 
@@ -105,15 +102,6 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .theme-toggle-btn:active {
-      transform: scale(0.92);
-      background: var(--accent);
-      color: var(--accent-invert);
     }
 
     .search-wrap {
@@ -130,11 +118,6 @@
       color: var(--text-main);
       font-size: 14px;
       outline: none;
-      transition: all 0.25s ease;
-    }
-    .search-input:focus {
-      border-color: var(--text-main);
-      box-shadow: var(--glow);
     }
 
     .search-icon {
@@ -146,41 +129,17 @@
       color: var(--text-sub);
     }
 
-    /* Контентная область */
     .content-area {
       flex: 1;
       overflow-y: auto;
       padding: 20px 20px 190px 20px;
-      scroll-behavior: smooth;
     }
 
     .section-head {
       font-size: 20px;
       font-weight: 800;
       margin: 16px 0 14px 0;
-      letter-spacing: -0.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
-
-    .btn-mono {
-      background: var(--accent);
-      color: var(--accent-invert);
-      border: none;
-      padding: 12px 20px;
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: var(--glow);
-    }
-    .btn-mono:active { transform: scale(0.94); opacity: 0.9; }
 
     .btn-outline {
       background: transparent;
@@ -191,9 +150,7 @@
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .btn-outline:active { background: var(--bg-card-hover); transform: scale(0.95); }
 
     .track-row {
       display: flex;
@@ -205,10 +162,7 @@
       padding: 12px 14px;
       margin-bottom: 10px;
       cursor: pointer;
-      transition: all 0.25s ease;
     }
-    .track-row:hover { background: var(--bg-card-hover); }
-    .track-row:active { transform: scale(0.98); }
     .track-row.active {
       border-color: var(--text-main);
       box-shadow: var(--glow);
@@ -226,7 +180,6 @@
     .row-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .row-artist { font-size: 12px; color: var(--text-sub); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Мини-плеер */
     .mini-player {
       position: fixed;
       bottom: 74px;
@@ -269,12 +222,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: var(--glow);
     }
-    .play-btn-circle:active { transform: scale(0.88); }
 
-    /* Полноэкранный плеер */
     .full-player {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -299,7 +248,6 @@
       overflow: hidden; 
       box-shadow: var(--glow);
       border: 1px solid var(--border-glass);
-      transition: transform 0.3s ease;
     }
 
     .fp-cover { width: 100%; height: 100%; object-fit: cover; }
@@ -328,40 +276,22 @@
     .time-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); margin-top: 8px; }
 
     .fp-controls { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; }
-    .fp-btn { background: none; border: none; color: var(--text-main); font-size: 22px; cursor: pointer; opacity: 0.8; transition: all 0.2s ease; }
-    .fp-btn:active { transform: scale(0.85); opacity: 1; }
+    .fp-btn { background: none; border: none; color: var(--text-main); font-size: 22px; cursor: pointer; opacity: 0.8; }
     .fp-btn.active { opacity: 1; text-shadow: 0 0 10px var(--accent); }
 
-    /* Секция Регулировки громкости */
-    .volume-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      padding: 10px 16px;
-      border-radius: var(--radius-lg);
-      margin-bottom: 16px;
-    }
-
-    /* ИСПРАВЛЕННАЯ НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ */
     .bottom-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: 66px;
       background: var(--bg-glass);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border-top: 1px solid var(--border-glass);
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       align-items: center;
       z-index: 100;
       padding-bottom: env(safe-area-inset-bottom);
-      padding-left: 4px;
-      padding-right: 4px;
     }
 
     .nav-btn {
@@ -374,21 +304,9 @@
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
-      padding: 6px 2px;
-      border-radius: var(--radius-md);
-      width: 100%;
-      text-align: center;
     }
     .nav-btn.active { color: var(--text-main); }
     .nav-btn span.nav-icon { font-size: 18px; line-height: 1; }
-    .nav-btn span.nav-label {
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
 
     .card-box {
       background: var(--bg-card);
@@ -396,28 +314,6 @@
       border-radius: var(--radius-xl);
       padding: 24px;
       margin-bottom: 16px;
-    }
-
-    .input-mono {
-      width: 100%;
-      background: var(--bg-card-hover);
-      border: 1px solid var(--border-glass);
-      padding: 14px;
-      border-radius: var(--radius-md);
-      color: var(--text-main);
-      font-size: 14px;
-      margin-bottom: 12px;
-      outline: none;
-    }
-    .input-mono:focus { border-color: var(--text-main); }
-
-    .badge-admin {
-      background: var(--accent);
-      color: var(--accent-invert);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-size: 10px;
-      font-weight: 900;
     }
   </style>
 </head>
@@ -450,7 +346,6 @@
       <button class="play-btn-circle" id="m-play-btn" onclick="event.stopPropagation(); togglePlay()">▶</button>
     </div>
 
-    <!-- Исправленная навигационная панель -->
     <div class="bottom-bar" id="bottom-bar"></div>
   </div>
 
@@ -458,11 +353,11 @@
   <div class="full-player" id="full-player">
     <div class="fp-header">
       <button class="fp-btn" onclick="closeFullPlayer()">✕</button>
-      <div style="font-size:12px; font-weight:800; letter-spacing:1.5px; opacity:0.6;">MONO PLAYER</div>
+      <div style="font-size:12px; font-weight:800; letter-spacing:1.5px; opacity:0.6;">WEB AUDIO</div>
       <button class="fp-btn" id="fp-fav-btn" onclick="toggleFavCurrent()">♡</button>
     </div>
     
-    <div class="fp-cover-wrap" id="fp-cover-wrap">
+    <div class="fp-cover-wrap">
       <img class="fp-cover" id="fp-cover" src="" onerror="handleCoverError(this)">
     </div>
 
@@ -486,48 +381,17 @@
       <button class="fp-btn" onclick="nextTrack()">⏭</button>
       <button class="fp-btn" id="btn-repeat" onclick="toggleRepeat()">🔁</button>
     </div>
-
-    <!-- Регулятор громкости -->
-    <div class="volume-box">
-      <span style="font-size:16px;">🔊</span>
-      <input type="range" class="slider-range" id="volume-slider" value="100" min="0" max="100" oninput="changeVolume(this.value)">
-    </div>
-
-    <div style="display:flex; justify-content:space-around; align-items:center; margin-top:auto;">
-      <button class="btn-outline" onclick="cycleEQ()">EQ: <span id="eq-mode">Flat</span></button>
-      <button class="btn-outline" onclick="setSleepTimer()">💤 Таймер: <span id="timer-val">Off</span></button>
-    </div>
   </div>
 
   <script>
     const audio = new Audio();
     audio.crossOrigin = "anonymous";
 
-    let audioCtx, audioSource, biquadFilter;
-
-    function initAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        audioSource = audioCtx.createMediaElementSource(audio);
-        biquadFilter = audioCtx.createBiquadFilter();
-        audioSource.connect(biquadFilter);
-        biquadFilter.connect(audioCtx.destination);
-      }
-    }
-
-    const GITHUB_USER = 'bomba33345-sudo';
-    const GITHUB_REPO = 'frame.github.io';
-    const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/`;
-    const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/assets`;
+    const BASE_URL = 'https://ws117.web1.websitegame.ru/assets/';
+    const JSON_URL = BASE_URL + 'tracks.json';
     const FALLBACK_COVER = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23222"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23fff" font-size="30">🎵</text></svg>';
 
-    let db;
-    let sleepTimerTimeout = null;
-    let eqModes = ['Flat', 'Bass Boost', 'Vocal', 'Treble'];
-    let currentEqIndex = 0;
-
     let appState = {
-      user: JSON.parse(localStorage.getItem('mono_user')) || null,
       currentTab: 'home',
       currentTrack: null,
       isPlaying: false,
@@ -536,91 +400,57 @@
       repeatMode: 0,
       theme: localStorage.getItem('mono_theme') || 'dark',
       favorites: JSON.parse(localStorage.getItem('mono_favs')) || [],
-      playlists: JSON.parse(localStorage.getItem('mono_playlists')) || [],
-      history: JSON.parse(localStorage.getItem('mono_history')) || [],
       tracks: []
     };
 
-    if (appState.theme === 'light') {
-      document.body.classList.add('theme-light');
-    }
+    if (appState.theme === 'light') document.body.classList.add('theme-light');
 
-    function initDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open('MonoMusicDB', 1);
-        request.onupgradeneeded = (e) => {
-          const database = e.target.result;
-          if (!database.objectStoreNames.contains('user_tracks')) {
-            database.createObjectStore('user_tracks', { keyPath: 'id' });
-          }
-        };
-        request.onsuccess = (e) => { db = e.target.result; resolve(); };
-        request.onerror = (e) => reject(e);
-      });
-    }
-
-    function saveTrackToDB(track) {
-      return new Promise((resolve, reject) => {
-        const store = db.transaction(['user_tracks'], 'readwrite').objectStore('user_tracks');
-        const req = store.put(track);
-        req.onsuccess = () => resolve();
-        req.onerror = (e) => reject(e);
-      });
-    }
-
-    function loadTracksFromDB() {
-      return new Promise((resolve, reject) => {
-        const store = db.transaction(['user_tracks'], 'readonly').objectStore('user_tracks');
-        const req = store.getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = (e) => reject(e);
-      });
-    }
-
-    function deleteTrackFromDB(id) {
-      return new Promise((resolve) => {
-        const store = db.transaction(['user_tracks'], 'readwrite').objectStore('user_tracks');
-        store.delete(id);
-        store.transaction.oncomplete = () => resolve();
-      });
-    }
-
-    async function loadAllTracks() {
-      let githubTracks = [];
+    async function loadCustomServerTracks() {
       try {
-        const res = await fetch(GITHUB_API_URL);
+        const res = await fetch(JSON_URL);
         if (res.ok) {
-          const files = await res.json();
-          const audioFiles = files.filter(f => f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
-          githubTracks = audioFiles.map((file, idx) => {
-            const baseName = file.name.substring(0, file.name.lastIndexOf('.'));
+          const trackNames = await res.json();
+          
+          appState.tracks = trackNames.map((fileName, idx) => {
+            let artist = 'Неизвестный исполнитель';
+            let title = fileName.replace(/_/g, ' ');
+
+            if (title.includes(' - ')) {
+              const parts = title.split(' - ');
+              artist = parts[0].trim();
+              title = parts.slice(1).join(' - ').trim();
+            }
+
+            const encodedName = encodeURIComponent(fileName);
+
             return {
-              id: 'gh_' + idx,
-              title: baseName.replace(/_/g, ' '),
-              artist: 'Mono Records',
-              src: file.download_url,
-              cover: GITHUB_RAW_BASE + baseName + '.png',
-              isCustom: false
+              id: 'srv_' + idx,
+              title: title,
+              artist: artist,
+              src: BASE_URL + encodedName + '.mp3',
+              cover: BASE_URL + encodedName + '.png'
             };
           });
         }
-      } catch (e) {}
-
-      const localTracks = await loadTracksFromDB();
-      appState.tracks = [...localTracks, ...githubTracks];
+      } catch (e) {
+        console.error('Ошибка загрузки треков с вашего сервера:', e);
+      }
       render();
     }
 
-    function handleCoverError(img) { img.src = FALLBACK_COVER; }
+    function handleCoverError(img) { 
+      if (img.src.endsWith('.png')) {
+        img.src = img.src.slice(0, -4) + '.jpg';
+      } else {
+        img.src = FALLBACK_COVER; 
+      }
+    }
 
     function toggleTheme() {
       appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('mono_theme', appState.theme);
-      if (appState.theme === 'light') {
-        document.body.classList.add('theme-light');
-      } else {
-        document.body.classList.remove('theme-light');
-      }
+      if (appState.theme === 'light') document.body.classList.add('theme-light');
+      else document.body.classList.remove('theme-light');
       render();
     }
 
@@ -629,43 +459,24 @@
       render();
     }
 
-    function changeVolume(val) {
-      audio.volume = val / 100;
-    }
-
     function render() {
       const view = document.getElementById('main-content');
       
       document.getElementById('theme-icon').textContent = appState.theme === 'dark' ? '◑' : '◐';
       document.getElementById('theme-text').textContent = appState.theme === 'dark' ? 'Светлая' : 'Тёмная';
 
-      // Чёткая отцентрованная панель навигации
       document.getElementById('bottom-bar').innerHTML = `
         <div class="nav-btn ${appState.currentTab === 'home' ? 'active' : ''}" onclick="switchTab('home')">
           <span class="nav-icon">⚡</span>
-          <span class="nav-label">Главная</span>
-        </div>
-        <div class="nav-btn ${appState.currentTab === 'playlists' ? 'active' : ''}" onclick="switchTab('playlists')">
-          <span class="nav-icon">📁</span>
-          <span class="nav-label">Плейлисты</span>
+          <span>Главная</span>
         </div>
         <div class="nav-btn ${appState.currentTab === 'favs' ? 'active' : ''}" onclick="switchTab('favs')">
           <span class="nav-icon">🖤</span>
-          <span class="nav-label">Избранное</span>
+          <span>Избранное</span>
         </div>
-        <div class="nav-btn ${appState.currentTab === 'history' ? 'active' : ''}" onclick="switchTab('history')">
-          <span class="nav-icon">🕒</span>
-          <span class="nav-label">История</span>
-        </div>
-        ${appState.user && appState.user.isAdmin ? `
-          <div class="nav-btn ${appState.currentTab === 'admin' ? 'active' : ''}" onclick="switchTab('admin')">
-            <span class="nav-icon">⚙️</span>
-            <span class="nav-label">Админ</span>
-          </div>
-        ` : ''}
-        <div class="nav-btn ${appState.currentTab === 'auth' ? 'active' : ''}" onclick="switchTab('auth')">
-          <span class="nav-icon">👤</span>
-          <span class="nav-label">Профиль</span>
+        <div class="nav-btn ${appState.currentTab === 'guide' ? 'active' : ''}" onclick="switchTab('guide')">
+          <span class="nav-icon">☁️</span>
+          <span>Инфо</span>
         </div>
       `;
 
@@ -675,70 +486,29 @@
       );
 
       if (appState.currentTab === 'home') {
-        view.innerHTML = `<div class="section-head">Все треки (${filteredTracks.length})</div>${renderTrackRows(filteredTracks)}`;
+        view.innerHTML = `<div class="section-head">Треки с сервера (${filteredTracks.length})</div>${renderTrackRows(filteredTracks)}`;
       } 
-      else if (appState.currentTab === 'playlists') {
-        view.innerHTML = `
-          <div class="section-head">Плейлисты</div>
-          <button class="btn-mono" style="width:100%; margin-bottom:16px;" onclick="createPlaylist()">➕ Создать плейлист</button>
-          ${appState.playlists.map(p => `
-            <div class="card-box" style="display:flex; justify-content:space-between; align-items:center; padding:16px;">
-              <div>
-                <div style="font-weight:800; font-size:16px;">${p.name}</div>
-                <div style="font-size:12px; color:var(--text-sub);">${p.trackIds.length} треков</div>
-              </div>
-              <button class="btn-outline" onclick="deletePlaylist('${p.id}')">Удалить</button>
-            </div>
-          `).join('') || '<div style="color:var(--text-sub); text-align:center; padding:20px;">Плейлистов нет</div>'}
-        `;
-      }
       else if (appState.currentTab === 'favs') {
         const favs = filteredTracks.filter(t => appState.favorites.includes(t.id));
         view.innerHTML = `<div class="section-head">Избранное (${favs.length})</div>${renderTrackRows(favs)}`;
       }
-      else if (appState.currentTab === 'history') {
-        const histTracks = appState.history.map(id => appState.tracks.find(t => t.id === id)).filter(Boolean);
-        view.innerHTML = `<div class="section-head">История прослушиваний</div>${renderTrackRows(histTracks)}`;
-      }
-      else if (appState.currentTab === 'auth') {
-        view.innerHTML = appState.user ? `
-          <div class="card-box">
-            <h2>Профиль: ${appState.user.name}</h2>
-            <p style="color:var(--text-sub); margin:10px 0 20px 0;">Статус: ${appState.user.isAdmin ? '<span class="badge-admin">АДМИНИСТРАТОР</span>' : 'Пользователь'}</p>
-            <button class="btn-mono" style="width:100%;" onclick="logout()">Выйти из аккаунта</button>
-          </div>
-        ` : `
-          <div class="card-box">
-            <h2 style="margin-bottom:16px;">Авторизация</h2>
-            <input class="input-mono" id="auth-name" placeholder="Логин (например: admin)">
-            <input class="input-mono" type="password" id="auth-pass" placeholder="Пароль">
-            <button class="btn-mono" style="width:100%;" onclick="login()">Войти</button>
-          </div>
-        `;
-      }
-      else if (appState.currentTab === 'admin') {
+      else if (appState.currentTab === 'guide') {
         view.innerHTML = `
           <div class="card-box">
-            <h2>Загрузить трек</h2>
-            <p style="color:var(--text-sub); font-size:12px; margin-bottom:16px;">Управление треками доступно администраторам</p>
-            <input class="input-mono" id="adm-title" placeholder="Название трека *">
-            <input class="input-mono" id="adm-artist" placeholder="Исполнитель">
-            <div style="margin-bottom:12px;">
-              <label style="font-size:12px; color:var(--text-sub);">Аудиофайл:</label>
-              <input type="file" id="adm-audio-file" accept="audio/*" class="input-mono" style="margin-top:4px;">
-            </div>
-            <div style="margin-bottom:16px;">
-              <label style="font-size:12px; color:var(--text-sub);">Обложка:</label>
-              <input type="file" id="adm-cover-file" accept="image/*" class="input-mono" style="margin-top:4px;">
-            </div>
-            <button class="btn-mono" style="width:100%;" onclick="adminAddTrack()">Опубликовать трек</button>
+            <h2 style="margin-bottom:10px;">☁️ Ваш сервер</h2>
+            <p style="color:var(--text-sub); font-size:13px; line-height:1.5; margin-bottom:12px;">
+              Файлы подгружаются с <b>ws117.web1.websitegame.ru</b>
+            </p>
+            <p style="color:var(--text-sub); font-size:12px;">
+              Чтобы добавить трек, загрузите в папку <code>assets</code> файлы MP3 и PNG, а затем добавьте имя в <code>tracks.json</code>.
+            </p>
           </div>
         `;
       }
     }
 
     function renderTrackRows(list) {
-      if (!list.length) return `<div style="color:var(--text-sub); text-align:center; padding:40px;">Список пуст</div>`;
+      if (!list.length) return `<div style="color:var(--text-sub); text-align:center; padding:40px;">Ничего не найдено</div>`;
       return list.map(t => `
         <div class="track-row ${appState.currentTrack && appState.currentTrack.id === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
           <img class="row-cover" src="${t.cover}" onerror="handleCoverError(this)">
@@ -746,9 +516,6 @@
             <div class="row-title">${t.title}</div>
             <div class="row-artist">${t.artist}</div>
           </div>
-          ${(appState.user && appState.user.isAdmin && t.isCustom) ? `
-            <button class="btn-outline" style="border:none; padding:8px;" onclick="event.stopPropagation(); removeCustomTrack('${t.id}')">🗑️</button>
-          ` : ''}
           <button class="btn-outline" style="border:none; padding:8px;" onclick="event.stopPropagation(); toggleFav('${t.id}')">
             ${appState.favorites.includes(t.id) ? '🖤' : '♡'}
           </button>
@@ -757,16 +524,12 @@
     }
 
     function playTrack(id) {
-      initAudioContext();
       const t = appState.tracks.find(x => x.id === id);
       if (!t) return;
       
       appState.currentTrack = t;
       audio.src = t.src;
       
-      appState.history = [id, ...appState.history.filter(x => x !== id)].slice(0, 20);
-      localStorage.setItem('mono_history', JSON.stringify(appState.history));
-
       audio.play().then(() => {
         appState.isPlaying = true;
         updatePlayerUI();
@@ -774,7 +537,6 @@
     }
 
     function togglePlay() {
-      initAudioContext();
       if (!appState.currentTrack && appState.tracks.length) return playTrack(appState.tracks[0].id);
       if (!appState.currentTrack) return;
 
@@ -809,48 +571,6 @@
       document.getElementById('btn-repeat').classList.toggle('active', appState.repeatMode === 1);
     }
 
-    function cycleEQ() {
-      initAudioContext();
-      currentEqIndex = (currentEqIndex + 1) % eqModes.length;
-      const mode = eqModes[currentEqIndex];
-      document.getElementById('eq-mode').textContent = mode;
-
-      if (mode === 'Bass Boost') {
-        biquadFilter.type = 'lowshelf';
-        biquadFilter.frequency.value = 200;
-        biquadFilter.gain.value = 10;
-      } else if (mode === 'Vocal') {
-        biquadFilter.type = 'peaking';
-        biquadFilter.frequency.value = 3000;
-        biquadFilter.gain.value = 6;
-      } else if (mode === 'Treble') {
-        biquadFilter.type = 'highshelf';
-        biquadFilter.frequency.value = 4000;
-        biquadFilter.gain.value = 8;
-      } else {
-        biquadFilter.type = 'allpass';
-      }
-    }
-
-    function setSleepTimer() {
-      const minutes = prompt("Через сколько минут остановить музыку? (15, 30, 60 или 0 для отмены):", "15");
-      if (minutes !== null) {
-        const m = parseInt(minutes);
-        if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
-        if (m > 0) {
-          document.getElementById('timer-val').textContent = m + 'm';
-          sleepTimerTimeout = setTimeout(() => {
-            audio.pause();
-            appState.isPlaying = false;
-            updatePlayerUI();
-            alert("Таймер сна сработал");
-          }, m * 60 * 1000);
-        } else {
-          document.getElementById('timer-val').textContent = 'Off';
-        }
-      }
-    }
-
     function updatePlayerUI() {
       if (!appState.currentTrack) return;
       document.getElementById('mini-player').style.display = 'flex';
@@ -867,60 +587,6 @@
       const favBtn = document.getElementById('fp-fav-btn');
       favBtn.textContent = appState.favorites.includes(appState.currentTrack.id) ? '🖤' : '♡';
 
-      render();
-    }
-
-    function fileToBase64(file) {
-      return new Promise((res, rej) => {
-        const r = new FileReader();
-        r.readAsDataURL(file);
-        r.onload = () => res(r.result);
-        r.onerror = e => rej(e);
-      });
-    }
-
-    async function adminAddTrack() {
-      if (!appState.user || !appState.user.isAdmin) return alert("Доступ запрещен!");
-      
-      const title = document.getElementById('adm-title').value.trim();
-      const artist = document.getElementById('adm-artist').value.trim() || 'Исполнитель';
-      if (!title) return alert('Введите название!');
-
-      const aFile = document.getElementById('adm-audio-file').files[0];
-      const cFile = document.getElementById('adm-cover-file').files[0];
-      if (!aFile) return alert('Выберите аудиофайл!');
-
-      const src = await fileToBase64(aFile);
-      const cover = cFile ? await fileToBase64(cFile) : FALLBACK_COVER;
-
-      const newTrack = { id: 'local_' + Date.now(), title, artist, src, cover, isCustom: true };
-      await saveTrackToDB(newTrack);
-      appState.tracks.unshift(newTrack);
-      playTrack(newTrack.id);
-      switchTab('home');
-    }
-
-    async function removeCustomTrack(id) {
-      if (!appState.user || !appState.user.isAdmin) return alert("Ошибки доступа!");
-      if (confirm('Удалить этот трек?')) {
-        await deleteTrackFromDB(id);
-        appState.tracks = appState.tracks.filter(t => t.id !== id);
-        render();
-      }
-    }
-
-    function createPlaylist() {
-      const name = prompt("Название плейлиста:");
-      if (name) {
-        appState.playlists.push({ id: 'pl_' + Date.now(), name, trackIds: [] });
-        localStorage.setItem('mono_playlists', JSON.stringify(appState.playlists));
-        render();
-      }
-    }
-
-    function deletePlaylist(id) {
-      appState.playlists = appState.playlists.filter(p => p.id !== id);
-      localStorage.setItem('mono_playlists', JSON.stringify(appState.playlists));
       render();
     }
 
@@ -953,17 +619,7 @@
 
     function switchTab(t) { appState.currentTab = t; render(); }
 
-    function login() {
-      const u = document.getElementById('auth-name').value.trim();
-      const p = document.getElementById('auth-pass').value.trim();
-      if (!u) return alert('Введите имя пользователя');
-      appState.user = { name: u, isAdmin: (u === 'admin' && p === 'admin123') };
-      localStorage.setItem('mono_user', JSON.stringify(appState.user));
-      render();
-    }
-    function logout() { appState.user = null; localStorage.removeItem('mono_user'); switchTab('home'); }
-
-    initDB().then(() => loadAllTracks());
+    loadCustomServerTracks();
   </script>
 </body>
 </html>
