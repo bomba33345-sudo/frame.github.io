@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#030014">
-  <title>Mono.Music</title>
+  <title>Mono.Music Cyber Elite Pro Ultra</title>
   <style>
     :root {
       --bg-dark: #02000a;
@@ -202,7 +202,7 @@
       border: 1px solid var(--border-glass);
       border-radius: var(--radius-xl);
       padding: 24px;
-      max-width: 400px;
+      max-width: 450px;
       margin: 20px auto;
     }
     .cyber-input {
@@ -234,6 +234,40 @@
       font-size: 10px;
       margin-left: 6px;
     }
+    .tab-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tab-toggle-btn {
+      flex: 1;
+      padding: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-glass);
+      color: var(--text-sub);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .tab-toggle-btn.active {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+    label.file-label {
+      display: block;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed var(--border-glass);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -257,11 +291,7 @@
     </div>
 
     <!-- Навигация -->
-    <div class="bottom-bar" id="bottom-bar">
-      <div class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span>⚡</span>Главная</div>
-      <div class="nav-btn" data-tab="favs" onclick="switchTab('favs')"><span>❤️</span>Избранное</div>
-      <div class="nav-btn" data-tab="auth" onclick="switchTab('auth')"><span>👤</span>Профиль</div>
-    </div>
+    <div class="bottom-bar" id="bottom-bar"></div>
   </div>
 
   <!-- Полноэкранный плеер -->
@@ -298,6 +328,7 @@
 
   <script>
     const audio = new Audio();
+    audio.crossOrigin = "anonymous";
 
     // GitHub Конфигурация
     const GITHUB_USER = 'bomba33345-sudo';
@@ -305,7 +336,7 @@
     const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/`;
     const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/assets`;
 
-    // Запасные аватарки для обложек, если файла обложки нет на GitHub
+    // Запасная аватара для обложек
     const FALLBACK_COVER = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%237f00ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f2fe" font-size="30">🎵</text></svg>';
 
     let appState = {
@@ -314,10 +345,11 @@
       currentTrack: null,
       isPlaying: false,
       favorites: JSON.parse(localStorage.getItem('mono_favs')) || [],
-      tracks: []
+      tracks: [],
+      adminSourceType: 'file' // 'file' или 'url'
     };
 
-    // Функция поиска картинок (.png, .jpg, .webp)
+    // Перебор расшерений картинки
     function getCoverVariants(baseName) {
       return [
         GITHUB_RAW_BASE + baseName + '.png',
@@ -327,7 +359,6 @@
       ];
     }
 
-    // Обработка ошибки загрузки обложки (перебор расширений -> фоллбек)
     function handleCoverError(imgElement) {
       const attempts = parseInt(imgElement.getAttribute('data-attempt') || '0');
       const baseName = imgElement.getAttribute('data-basename');
@@ -343,7 +374,7 @@
       imgElement.src = FALLBACK_COVER;
     }
 
-    // Авто-загрузка файлов из GitHub API
+    // Подгрузка треков с GitHub
     async function loadTracksFromGitHub() {
       try {
         const res = await fetch(GITHUB_API_URL);
@@ -361,14 +392,52 @@
               artist: 'GitHub Track',
               src: file.download_url,
               baseName: baseName,
-              cover: GITHUB_RAW_BASE + baseName + '.png' // По умолчанию запрашиваем PNG
+              cover: GITHUB_RAW_BASE + baseName + '.png'
             };
           });
         }
       } catch (e) {
-        console.warn("Ошибка подгрузки с GitHub API. Используются локальные данные.");
+        console.warn("Использование локальных данных.");
       }
       render();
+    }
+
+    /* МЕДИА-СЕССИЯ ДЛЯ СИСТЕМНОГО ПЛЕЕРА И ШТОРКИ УВЕДОМЛЕНИЙ */
+    function setupMediaSession() {
+      if ('mediaSession' in navigator && appState.currentTrack) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: appState.currentTrack.title,
+          artist: appState.currentTrack.artist,
+          album: 'Mono.Music',
+          artwork: [
+            { src: appState.currentTrack.cover, sizes: '512x512', type: 'image/png' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => togglePlay());
+        navigator.mediaSession.setActionHandler('pause', () => togglePlay());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+        navigator.mediaSession.setActionHandler('seekto', (details) => {
+          if (details.fastSeek && ('fastSeek' in audio)) {
+            audio.fastSeek(details.seekTime);
+            return;
+          }
+          audio.currentTime = details.seekTime;
+        });
+      }
+    }
+
+    function updateMediaSessionPosition() {
+      if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+        if (!isNaN(audio.duration) && audio.duration > 0) {
+          navigator.mediaSession.setPositionState({
+            duration: audio.duration,
+            playbackRate: audio.playbackRate,
+            position: audio.currentTime
+          });
+        }
+      }
     }
 
     function render() {
@@ -381,7 +450,7 @@
         userPill.textContent = '👤 Войти';
       }
 
-      // Обновляем панель навигации (показываем кнопку админки если admin)
+      // Навигационная панель
       const bottomBar = document.getElementById('bottom-bar');
       bottomBar.innerHTML = `
         <div class="nav-btn ${appState.currentTab === 'home' ? 'active' : ''}" onclick="switchTab('home')"><span>⚡</span>Главная</div>
@@ -418,15 +487,33 @@
       }
       else if (appState.currentTab === 'admin') {
         view.innerHTML = `
-          <div class="auth-card" style="max-width:100%;">
+          <div class="auth-card">
             <h2>⚙️ Панель администратора</h2>
-            <p style="color:var(--text-sub); font-size:12px; margin: 10px 0 20px 0;">Добавление новых треков напрямую в список:</p>
+            <p style="color:var(--text-sub); font-size:12px; margin: 8px 0 16px 0;">Добавление трека в плеер:</p>
             
+            <div class="tab-toggle">
+              <div class="tab-toggle-btn ${appState.adminSourceType === 'file' ? 'active' : ''}" onclick="setAdminSource('file')">📁 Файл с телефона</div>
+              <div class="tab-toggle-btn ${appState.adminSourceType === 'url' ? 'active' : ''}" onclick="setAdminSource('url')">🔗 Ссылка (URL)</div>
+            </div>
+
             <input class="cyber-input" id="adm-title" placeholder="Название трека">
             <input class="cyber-input" id="adm-artist" placeholder="Исполнитель">
-            <input class="cyber-input" id="adm-src" placeholder="Прямая ссылка на MP3/WAV">
-            <input class="cyber-input" id="adm-cover" placeholder="Ссылка на обложку (PNG/JPG)">
-            
+
+            ${appState.adminSourceType === 'file' ? `
+              <label class="file-label" id="audio-file-label">
+                🎵 Выбрать аудиотрек (.mp3, .wav)
+                <input type="file" id="adm-audio-file" accept="audio/*" style="display:none;" onchange="updateFileLabel(this, 'audio-file-label', '🎵 Трек выбран: ')">
+              </label>
+
+              <label class="file-label" id="cover-file-label">
+                🖼️ Выбрать обложку (.png, .jpg)
+                <input type="file" id="adm-cover-file" accept="image/*" style="display:none;" onchange="updateFileLabel(this, 'cover-file-label', '🖼️ Обложка выбрана: ')">
+              </label>
+            ` : `
+              <input class="cyber-input" id="adm-src" placeholder="Прямая ссылка на MP3/WAV">
+              <input class="cyber-input" id="adm-cover" placeholder="Ссылка на обложку (PNG/JPG)">
+            `}
+
             <button class="cyber-btn" onclick="adminAddTrack()">Добавить трек</button>
           </div>
         `;
@@ -434,6 +521,17 @@
       else if (appState.currentTab === 'favs') {
         const favList = appState.tracks.filter(t => appState.favorites.includes(t.id));
         view.innerHTML = `<div class="section-head">Избранное (${favList.length})</div>${renderTrackRows(favList)}`;
+      }
+    }
+
+    function setAdminSource(type) {
+      appState.adminSourceType = type;
+      render();
+    }
+
+    function updateFileLabel(input, labelId, prefix) {
+      if (input.files && input.files[0]) {
+        document.getElementById(labelId).innerText = prefix + input.files[0].name;
       }
     }
 
@@ -459,16 +557,26 @@
       if (!t) return;
       appState.currentTrack = t;
       audio.src = t.src;
+      
       audio.play().then(() => {
         appState.isPlaying = true;
+        setupMediaSession();
         updatePlayerUI();
-      }).catch(e => console.log("Ошибка воспроизведения"));
+      }).catch(e => console.log("Ошибка воспроизведения", e));
     }
 
     function togglePlay() {
       if (!appState.currentTrack && appState.tracks.length) return playTrack(appState.tracks[0].id);
-      if (appState.isPlaying) { audio.pause(); appState.isPlaying = false; } 
-      else { audio.play(); appState.isPlaying = true; }
+      if (appState.isPlaying) { 
+        audio.pause(); 
+        appState.isPlaying = false; 
+      } else { 
+        audio.play(); 
+        appState.isPlaying = true; 
+      }
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = appState.isPlaying ? "playing" : "paused";
+      }
       updatePlayerUI();
     }
 
@@ -510,7 +618,7 @@
       render();
     }
 
-    /* АВТОРИЗАЦИЯ ДЛЯ ТЕСТ УЗЕРА ADMIN / ADMIN123 */
+    /* АВТОРИЗАЦИЯ И ДОБАВЛЕНИЕ */
     function login() {
       const userVal = document.getElementById('auth-name').value.trim();
       const passVal = document.getElementById('auth-pass').value.trim();
@@ -533,21 +641,44 @@
     function adminAddTrack() {
       const title = document.getElementById('adm-title').value.trim();
       const artist = document.getElementById('adm-artist').value.trim() || 'Admin';
-      const src = document.getElementById('adm-src').value.trim();
-      const cover = document.getElementById('adm-cover').value.trim();
 
-      if (!title || !src) return alert('Укажите название и ссылку на mp3');
+      if (!title) return alert('Укажите название трека!');
+
+      let trackSrc = '';
+      let coverSrc = '';
+
+      if (appState.adminSourceType === 'file') {
+        const audioInput = document.getElementById('adm-audio-file');
+        const coverInput = document.getElementById('adm-cover-file');
+
+        if (!audioInput.files || !audioInput.files[0]) {
+          return alert('Выберите аудиофайл с телефона!');
+        }
+
+        trackSrc = URL.createObjectURL(audioInput.files[0]);
+
+        if (coverInput.files && coverInput.files[0]) {
+          coverSrc = URL.createObjectURL(coverInput.files[0]);
+        } else {
+          coverSrc = FALLBACK_COVER;
+        }
+      } else {
+        trackSrc = document.getElementById('adm-src').value.trim();
+        coverSrc = document.getElementById('adm-cover').value.trim() || FALLBACK_COVER;
+
+        if (!trackSrc) return alert('Укажите ссылку на mp3/wav файл!');
+      }
 
       const newTrack = {
         id: String(Date.now()),
         title,
         artist,
-        src,
-        cover: cover || FALLBACK_COVER
+        src: trackSrc,
+        cover: coverSrc
       };
 
       appState.tracks.unshift(newTrack);
-      alert('Трек успешно добавлен в список!');
+      alert('Трек успешно добавлен!');
       switchTab('home');
     }
 
@@ -556,6 +687,7 @@
       document.getElementById('fp-progress').value = (audio.currentTime / audio.duration) * 100;
       document.getElementById('fp-curr-time').textContent = formatTime(audio.currentTime);
       document.getElementById('fp-dur-time').textContent = formatTime(audio.duration);
+      updateMediaSessionPosition();
     };
 
     function seekAudio(val) {
