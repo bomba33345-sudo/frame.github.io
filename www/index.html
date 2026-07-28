@@ -26,7 +26,6 @@
       --text-main: #ffffff;
       --text-sub: #a0a5c0;
       --border-glass: rgba(255, 255, 255, 0.12);
-      --border-active: rgba(0, 242, 254, 0.5);
       
       --radius-xl: 32px;
       --radius-lg: 20px;
@@ -56,7 +55,6 @@
       background-attachment: fixed;
     }
 
-    /* Главный контейнер */
     .app-viewport {
       display: flex;
       flex-direction: column;
@@ -65,7 +63,6 @@
       position: relative;
     }
 
-    /* Верхняя панель */
     .top-bar {
       padding: 16px 20px;
       background: var(--bg-glass);
@@ -106,7 +103,6 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    /* Контент */
     .content-area {
       flex: 1;
       overflow-y: auto;
@@ -125,7 +121,6 @@
       letter-spacing: -0.3px;
     }
 
-    /* Список треков */
     .track-row {
       display: flex;
       align-items: center;
@@ -138,7 +133,7 @@
       padding: 12px 14px;
       margin-bottom: 12px;
       cursor: pointer;
-      transition: all 0.25 cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
     }
@@ -165,7 +160,6 @@
     .row-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
     .row-artist { font-size: 13px; color: var(--text-sub); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Кнопки управления треком */
     .icon-btn {
       background: none;
       border: none;
@@ -188,7 +182,6 @@
       text-shadow: var(--glow-magenta);
     }
 
-    /* Мини-плеер */
     .mini-player {
       position: fixed;
       bottom: 78px;
@@ -242,7 +235,6 @@
       box-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
     }
 
-    /* Нижнее меню */
     .bottom-bar {
       position: fixed;
       bottom: 0;
@@ -278,7 +270,6 @@
     }
     .nav-btn span { font-size: 20px; }
 
-    /* Полноэкранный плеер */
     .full-player {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -336,7 +327,6 @@
     .fp-btn { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; transition: transform 0.2s ease; }
     .fp-btn:active { transform: scale(0.85); }
 
-    /* Админка и карточки */
     .auth-card {
       background: var(--bg-glass-heavy);
       border: 1px solid var(--border-glass);
@@ -365,7 +355,6 @@
       background: rgba(0, 0, 0, 0.7);
     }
 
-    /* МОЩНЫЕ И НАДЕЖНЫЕ КНОПКИ */
     .cyber-btn {
       width: 100%;
       padding: 16px;
@@ -432,7 +421,6 @@
       box-shadow: var(--glow-purple);
     }
 
-    /* Улучшенная кастомная загрузка файлов */
     .file-dropzone {
       display: flex;
       flex-direction: column;
@@ -528,6 +516,7 @@
 
     const FALLBACK_COVER = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230c0a20"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f2fe" font-size="35">🎵</text></svg>';
 
+    let db;
     let appState = {
       user: JSON.parse(localStorage.getItem('mono_user')) || null,
       currentTab: 'home',
@@ -535,8 +524,55 @@
       isPlaying: false,
       favorites: JSON.parse(localStorage.getItem('mono_favs')) || [],
       tracks: [],
-      adminSourceType: 'file' // 'file' или 'url'
+      adminSourceType: 'file'
     };
+
+    /* РАБОТА С ХРАНИЛИЩЕМ INDEXEDDB (ДЛЯ ВЕЧНОГО СОХРАНЕНИЯ ФАЙЛОВ НА УСТРОЙСТВЕ) */
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('MonoMusicDB', 1);
+        request.onupgradeneeded = (e) => {
+          const database = e.target.result;
+          if (!database.objectStoreNames.contains('user_tracks')) {
+            database.createObjectStore('user_tracks', { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = (e) => {
+          db = e.target.result;
+          resolve();
+        };
+        request.onerror = (e) => reject(e);
+      });
+    }
+
+    function saveTrackToDB(track) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['user_tracks'], 'readwrite');
+        const store = transaction.objectStore('user_tracks');
+        const req = store.put(track);
+        req.onsuccess = () => resolve();
+        req.onerror = (e) => reject(e);
+      });
+    }
+
+    function loadTracksFromDB() {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['user_tracks'], 'readonly');
+        const store = transaction.objectStore('user_tracks');
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result || []);
+        req.onerror = (e) => reject(e);
+      });
+    }
+
+    function deleteTrackFromDB(id) {
+      return new Promise((resolve) => {
+        const transaction = db.transaction(['user_tracks'], 'readwrite');
+        const store = transaction.objectStore('user_tracks');
+        store.delete(id);
+        transaction.oncomplete = () => resolve();
+      });
+    }
 
     function getCoverVariants(baseName) {
       return [
@@ -562,31 +598,33 @@
       imgElement.src = FALLBACK_COVER;
     }
 
-    // Подгрузка треков с GitHub
-    async function loadTracksFromGitHub() {
+    /* ЗАГРУЗКА ВСЕХ ТРЕКОВ (GITHUB + СОХРАНЕННЫЕ В APK) */
+    async function loadAllTracks() {
+      let githubTracks = [];
       try {
         const res = await fetch(GITHUB_API_URL);
-        if (!res.ok) throw new Error('API Error');
-        const files = await res.json();
-        
-        const audioFiles = files.filter(f => f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
-        
-        if (audioFiles.length > 0) {
-          appState.tracks = audioFiles.map((file, idx) => {
+        if (res.ok) {
+          const files = await res.json();
+          const audioFiles = files.filter(f => f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
+          githubTracks = audioFiles.map((file, idx) => {
             const baseName = file.name.substring(0, file.name.lastIndexOf('.'));
             return {
-              id: String(idx + 1),
+              id: 'gh_' + idx,
               title: baseName.replace(/_/g, ' '),
               artist: 'GitHub Audio',
               src: file.download_url,
               baseName: baseName,
-              cover: GITHUB_RAW_BASE + baseName + '.png'
+              cover: GITHUB_RAW_BASE + baseName + '.png',
+              isCustom: false
             };
           });
         }
       } catch (e) {
-        console.warn("Ошибка подгрузки из GitHub, используется локальный список.");
+        console.warn("GitHub недоступен, загрузка локальных треков.");
       }
+
+      const localTracks = await loadTracksFromDB();
+      appState.tracks = [...localTracks, ...githubTracks];
       render();
     }
 
@@ -596,7 +634,7 @@
         navigator.mediaSession.metadata = new MediaMetadata({
           title: appState.currentTrack.title,
           artist: appState.currentTrack.artist,
-          album: 'Mono.Music Cyber Elite',
+          album: 'Mono.Music',
           artwork: [
             { src: appState.currentTrack.cover, sizes: '512x512', type: 'image/png' }
           ]
@@ -638,7 +676,6 @@
         userPill.textContent = '👤 Войти';
       }
 
-      // Нижнее меню
       const bottomBar = document.getElementById('bottom-bar');
       bottomBar.innerHTML = `
         <div class="nav-btn ${appState.currentTab === 'home' ? 'active' : ''}" onclick="switchTab('home')"><span>⚡</span>Главная</div>
@@ -677,7 +714,7 @@
         view.innerHTML = `
           <div class="auth-card">
             <h2 style="margin-bottom:8px;">⚙️ Панель управления</h2>
-            <p style="color:var(--text-sub); font-size:13px; margin-bottom:20px;">Добавление новых треков в коллекцию</p>
+            <p style="color:var(--text-sub); font-size:13px; margin-bottom:20px;">Загруженные треки сохраняются на устройстве навсегда</p>
             
             <div class="tab-toggle">
               <button class="tab-toggle-btn ${appState.adminSourceType === 'file' ? 'active' : ''}" onclick="setAdminSource('file')">📁 С телефона</button>
@@ -704,7 +741,7 @@
               <input class="cyber-input" id="adm-cover" placeholder="Ссылка на обложку (PNG/JPG)">
             `}
 
-            <button class="cyber-btn" style="margin-top:10px;" onclick="adminAddTrack()">➕ Добавить трек</button>
+            <button class="cyber-btn" style="margin-top:10px;" id="add-btn" onclick="adminAddTrack()">➕ Добавить трек</button>
           </div>
         `;
       }
@@ -735,6 +772,7 @@
             <div class="row-title">${t.title}</div>
             <div class="row-artist">${t.artist}</div>
           </div>
+          ${t.isCustom ? `<button class="icon-btn" style="color:#ff3366;" onclick="event.stopPropagation(); removeCustomTrack('${t.id}')">🗑️</button>` : ''}
           <button class="icon-btn ${appState.favorites.includes(t.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav('${t.id}')">
             ${appState.favorites.includes(t.id) ? '❤️' : '♡'}
           </button>
@@ -742,7 +780,6 @@
       `).join('');
     }
 
-    /* ВОСПРОИЗВЕДЕНИЕ И УПРАВЛЕНИЕ ПЛЕЕРОМ */
     function playTrack(id) {
       const t = appState.tracks.find(x => x.id === id); 
       if (!t) return;
@@ -755,7 +792,7 @@
         updatePlayerUI();
       }).catch(e => {
         console.error("Ошибка воспроизведения:", e);
-        alert("Не удалось воспроизвести данный файл.");
+        alert("Не удалось воспроизвести файл.");
       });
     }
 
@@ -824,7 +861,6 @@
       render();
     }
 
-    /* АВТОРИЗАЦИЯ */
     function login() {
       const userVal = document.getElementById('auth-name').value.trim();
       const passVal = document.getElementById('auth-pass').value.trim();
@@ -844,78 +880,97 @@
       switchTab('home');
     }
 
-    /* БЕЗОШИБОЧНОЕ ДОБАВЛЕНИЕ ТРЕКА */
-    function adminAddTrack() {
+    // Чтение файла в формате Base64
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    /* ДОБАВЛЕНИЕ С СОХРАНЕНИЕМ НА ВЕЧНОСТЬ */
+    async function adminAddTrack() {
       const titleInput = document.getElementById('adm-title');
       const artistInput = document.getElementById('adm-artist');
+      const addBtn = document.getElementById('add-btn');
 
       const title = titleInput ? titleInput.value.trim() : '';
       const artist = (artistInput && artistInput.value.trim()) ? artistInput.value.trim() : 'Неизвестен';
 
-      if (!title) {
-        alert('Пожалуйста, укажите название трека!');
-        return;
-      }
+      if (!title) return alert('Укажите название трека!');
 
       let trackSrc = '';
       let coverSrc = '';
 
-      if (appState.adminSourceType === 'file') {
-        const audioInput = document.getElementById('adm-audio-file');
-        const coverInput = document.getElementById('adm-cover-file');
+      addBtn.disabled = true;
+      addBtn.textContent = "Сохранение...";
 
-        if (!audioInput || !audioInput.files || !audioInput.files[0]) {
-          alert('Пожалуйста, выберите аудиофайл с устройства!');
-          return;
-        }
+      try {
+        if (appState.adminSourceType === 'file') {
+          const audioInput = document.getElementById('adm-audio-file');
+          const coverInput = document.getElementById('adm-cover-file');
 
-        try {
-          trackSrc = URL.createObjectURL(audioInput.files[0]);
-        } catch (e) {
-          alert('Ошибка при чтении аудиофайла!');
-          return;
-        }
+          if (!audioInput || !audioInput.files || !audioInput.files[0]) {
+            addBtn.disabled = false;
+            addBtn.textContent = "➕ Добавить трек";
+            return alert('Выберите аудиофайл!');
+          }
 
-        if (coverInput && coverInput.files && coverInput.files[0]) {
-          try {
-            coverSrc = URL.createObjectURL(coverInput.files[0]);
-          } catch (e) {
+          trackSrc = await fileToBase64(audioInput.files[0]);
+
+          if (coverInput && coverInput.files && coverInput.files[0]) {
+            coverSrc = await fileToBase64(coverInput.files[0]);
+          } else {
             coverSrc = FALLBACK_COVER;
           }
+
         } else {
-          coverSrc = FALLBACK_COVER;
+          const srcInput = document.getElementById('adm-src');
+          const coverUrlInput = document.getElementById('adm-cover');
+
+          trackSrc = srcInput ? srcInput.value.trim() : '';
+          coverSrc = (coverUrlInput && coverUrlInput.value.trim()) ? coverUrlInput.value.trim() : FALLBACK_COVER;
+
+          if (!trackSrc) {
+            addBtn.disabled = false;
+            addBtn.textContent = "➕ Добавить трек";
+            return alert('Укажите ссылку на mp3/wav файл!');
+          }
         }
 
-      } else {
-        const srcInput = document.getElementById('adm-src');
-        const coverUrlInput = document.getElementById('adm-cover');
+        const newTrack = {
+          id: 'local_' + Date.now(),
+          title: title,
+          artist: artist,
+          src: trackSrc,
+          cover: coverSrc,
+          isCustom: true
+        };
 
-        trackSrc = srcInput ? srcInput.value.trim() : '';
-        coverSrc = (coverUrlInput && coverUrlInput.value.trim()) ? coverUrlInput.value.trim() : FALLBACK_COVER;
-
-        if (!trackSrc) {
-          alert('Пожалуйста, укажите прямую ссылку (URL) на mp3/wav файл!');
-          return;
-        }
+        await saveTrackToDB(newTrack);
+        appState.tracks.unshift(newTrack);
+        alert('🎉 Трек сохранен навсегда!');
+        
+        playTrack(newTrack.id);
+        switchTab('home');
+      } catch (e) {
+        alert('Ошибка при сохранении файла. Возможно, файл слишком большой.');
+      } finally {
+        addBtn.disabled = false;
+        addBtn.textContent = "➕ Добавить трек";
       }
-
-      const newTrack = {
-        id: String(Date.now()),
-        title: title,
-        artist: artist,
-        src: trackSrc,
-        cover: coverSrc
-      };
-
-      appState.tracks.unshift(newTrack);
-      alert('🎉 Трек успешно добавлен в список!');
-      
-      // Автоматический запуск нового трека
-      playTrack(newTrack.id);
-      switchTab('home');
     }
 
-    /* СОБЫТИЯ ПЛЕЕРА */
+    async function removeCustomTrack(id) {
+      if (confirm('Удалить этот трек навсегда?')) {
+        await deleteTrackFromDB(id);
+        appState.tracks = appState.tracks.filter(t => t.id !== id);
+        render();
+      }
+    }
+
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
       document.getElementById('fp-progress').value = (audio.currentTime / audio.duration) * 100;
@@ -924,9 +979,7 @@
       updateMediaSessionPosition();
     };
 
-    audio.onended = () => {
-      nextTrack();
-    };
+    audio.onended = () => { nextTrack(); };
 
     function seekAudio(val) {
       if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
@@ -959,7 +1012,10 @@
       render();
     }
 
-    loadTracksFromGitHub();
+    // Инициализация при старте
+    initDB().then(() => {
+      loadAllTracks();
+    });
   </script>
 </body>
 </html>
