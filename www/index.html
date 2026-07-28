@@ -3,43 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#030308">
-  <title>Mono.Music Ultra</title>
+  <meta name="theme-color" content="#030014">
+  <title>Mono.Music</title>
   <style>
     :root {
-      --bg-main: #05050d;
-      --bg-panel: rgba(18, 18, 32, 0.75);
-      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-dark: #02000a;
+      --bg-glass: rgba(12, 10, 32, 0.75);
+      --bg-glass-heavy: rgba(8, 6, 22, 0.92);
+      --bg-card: rgba(255, 255, 255, 0.035);
       --bg-card-hover: rgba(255, 255, 255, 0.08);
-      --bg-input: rgba(255, 255, 255, 0.06);
-      --accent: #00f2fe;
-      --accent-glow: rgba(0, 242, 254, 0.4);
-      --purple: #7f00ff;
-      --purple-glow: rgba(127, 0, 255, 0.35);
-      --danger: #ff4757;
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-purple: #7f00ff;
+      --accent-pink: #ff007f;
+      --neon-cyan: 0 0 20px rgba(0, 242, 254, 0.6);
+      --neon-pink: 0 0 20px rgba(255, 0, 127, 0.6);
+      --neon-purple: 0 0 25px rgba(127, 0, 255, 0.6);
       --text-main: #ffffff;
-      --text-muted: #9499ad;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(0, 242, 254, 0.3);
-      --radius-lg: 24px;
-      --radius-md: 16px;
+      --text-sub: #9ca3af;
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --border-active: rgba(0, 242, 254, 0.4);
+      --radius-xl: 32px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
       --radius-sm: 10px;
-      --shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, Helvetica, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
     body {
-      background: var(--bg-main);
+      background: var(--bg-dark);
       color: var(--text-main);
       height: 100vh;
       height: 100dvh;
@@ -47,30 +49,46 @@
       position: relative;
     }
 
-    .bg-glow {
+    /* Фоны и свечения */
+    .orb {
       position: absolute;
       border-radius: 50%;
       filter: blur(90px);
       pointer-events: none;
       z-index: 0;
-      animation: pulseGlow 8s infinite alternate ease-in-out;
+      animation: floatOrb 14s infinite alternate ease-in-out;
     }
-    .bg-glow-1 {
-      top: -10%; left: -10%; width: 80vw; height: 80vw;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    .orb-1 {
+      top: -15%;
+      left: -15%;
+      width: 100vw;
+      height: 100vw;
+      background: radial-gradient(circle, rgba(127,0,255,0.45) 0%, transparent 70%);
     }
-    .bg-glow-2 {
-      bottom: -10%; right: -10%; width: 80vw; height: 80vw;
-      background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%);
-      animation-delay: -4s;
+    .orb-2 {
+      bottom: -15%;
+      right: -15%;
+      width: 100vw;
+      height: 100vw;
+      background: radial-gradient(circle, rgba(0,242,254,0.35) 0%, transparent 70%);
+      animation-delay: -7s;
+    }
+    .orb-3 {
+      top: 40%;
+      left: 30%;
+      width: 70vw;
+      height: 70vw;
+      background: radial-gradient(circle, rgba(255,0,127,0.25) 0%, transparent 70%);
+      animation-duration: 18s;
     }
 
-    @keyframes pulseGlow {
-      0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
-      100% { transform: scale(1.2) translate(20px, 20px); opacity: 0.9; }
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(40px, 50px) scale(1.1) rotate(180deg); }
+      100% { transform: translate(-30px, 20px) scale(0.95) rotate(360deg); }
     }
 
-    .app-container {
+    .app-viewport {
       position: relative;
       z-index: 1;
       display: flex;
@@ -79,793 +97,694 @@
       height: 100dvh;
     }
 
-    .header {
+    /* Шапка */
+    .top-bar {
       padding: 16px 20px;
-      background: var(--bg-panel);
-      border-bottom: 1px solid var(--border);
+      background: var(--bg-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-bottom: 1px solid var(--border-glass);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      align-items: center;
+      z-index: 10;
     }
-    .brand {
+
+    .logo {
       font-size: 20px;
       font-weight: 900;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 60%, var(--accent-purple) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .brand-dot {
-      width: 8px; height: 8px;
-      background: var(--accent);
+
+    .logo-badge {
+      width: 12px;
+      height: 12px;
+      background: var(--accent-cyan);
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--accent);
-      animation: blink 2s infinite;
+      box-shadow: var(--neon-cyan);
+      animation: pulse 2s infinite ease-in-out;
     }
-    @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-    .role-badge {
-      font-size: 11px;
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    .user-pill {
+      font-size: 12px;
       font-weight: 700;
-      background: rgba(0, 242, 254, 0.1);
-      border: 1px solid var(--border-glow);
-      color: var(--accent);
-      padding: 5px 12px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-glass);
+      padding: 8px 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
     }
+    .user-pill:active { transform: scale(0.95); background: rgba(255,255,255,0.12); }
 
-    .viewport {
+    /* Рабочая область */
+    .content-area {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
+      padding: 20px;
       padding-bottom: 180px;
       scroll-behavior: smooth;
     }
-    .viewport::-webkit-scrollbar { display: none; }
+    .content-area::-webkit-scrollbar { display: none; }
 
-    .view-section {
-      animation: fadeInSlide 0.4s var(--ease-smooth) forwards;
-    }
-    @keyframes fadeInSlide {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-title {
+    .section-head {
       font-size: 18px;
       font-weight: 800;
-      margin: 16px 0 12px 0;
-      letter-spacing: -0.4px;
+      margin: 22px 0 14px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      letter-spacing: -0.3px;
     }
+    .section-head span { font-size: 12px; color: var(--accent-cyan); cursor: pointer; }
 
-    .cards-scroll {
-      display: flex;
+    /* Сетка и Карточки */
+    .track-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 14px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
-    .cards-scroll::-webkit-scrollbar { display: none; }
 
-    .card {
-      min-width: 140px;
-      width: 140px;
+    .cyber-card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 10px;
-      flex-shrink: 0;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 12px;
       transition: all 0.3s var(--ease-spring);
       cursor: pointer;
-    }
-    .card:active { transform: scale(0.93); }
-    .card-img-wrap {
       position: relative;
+      overflow: hidden;
+    }
+    .cyber-card:active { transform: scale(0.94); }
+    .cyber-card.active { border-color: var(--accent-cyan); box-shadow: var(--neon-cyan); }
+
+    .card-cover-wrap {
       width: 100%;
       aspect-ratio: 1;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       overflow: hidden;
-      margin-bottom: 8px;
+      position: relative;
+      margin-bottom: 10px;
     }
-    .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-    .card:hover .card-img { transform: scale(1.05); }
-    .card-play-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.3);
-      display: grid; place-items: center; opacity: 0; transition: opacity 0.2s ease;
-      font-size: 20px;
-    }
-    .card:hover .card-play-overlay, .card.active .card-play-overlay { opacity: 1; }
-    .card-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-artist { font-size: 11px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-cover { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .cyber-card:hover .card-cover { transform: scale(1.08); }
 
+    .card-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-artist { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
+
+    /* Список строк */
     .track-row {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 8px 12px;
-      margin-bottom: 8px;
-      transition: all 0.25s var(--ease-smooth);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      backdrop-filter: blur(10px);
       cursor: pointer;
+      transition: all 0.2s;
     }
-    .track-row:active { transform: scale(0.98); background: var(--bg-card-hover); }
+    .track-row:active { transform: scale(0.97); }
     .track-row.active {
-      border-color: var(--accent);
+      border-color: var(--accent-cyan);
       background: rgba(0, 242, 254, 0.08);
-      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.15);
+      box-shadow: var(--neon-cyan);
     }
-    .row-cover { width: 46px; height: 46px; border-radius: var(--radius-sm); object-fit: cover; flex-shrink: 0; }
-    .row-info { flex: 1; min-width: 0; }
+    .row-cover { width: 50px; height: 50px; border-radius: var(--radius-md); object-fit: cover; }
+    .row-meta { flex: 1; min-width: 0; }
     .row-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .row-artist { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    
-    .row-actions { display: flex; align-items: center; gap: 4px; }
-    .btn-icon {
-      background: none; border: none; color: var(--text-muted);
-      font-size: 18px; padding: 8px; cursor: pointer;
-      border-radius: 50%; transition: all 0.2s ease;
-      display: grid; place-items: center;
+    .row-artist { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px;
+      display: grid;
+      place-items: center;
+      transition: transform 0.2s;
     }
-    .btn-icon:active { transform: scale(0.8); color: #fff; }
-    .btn-icon.fav-active { color: var(--danger); }
+    .icon-btn:active { transform: scale(0.8); }
 
-    .eq-bar-wrap { display: flex; gap: 2px; height: 14px; align-items: flex-end; margin-right: 4px; }
-    .eq-bar { width: 3px; background: var(--accent); border-radius: 2px; animation: eqAnim 0.8s infinite alternate ease-in-out; }
-    .eq-bar:nth-child(2) { animation-delay: -0.3s; }
-    .eq-bar:nth-child(3) { animation-delay: -0.6s; }
-    @keyframes eqAnim { 0% { height: 3px; } 100% { height: 14px; } }
+    /* Анимированный эквалайзер */
+    .eq-bar-wrap { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+    .eq-bar { width: 3px; background: var(--accent-cyan); border-radius: 3px; animation: eqAnim 0.8s infinite alternate ease-in-out; }
+    .eq-bar:nth-child(2) { animation-delay: -0.2s; }
+    .eq-bar:nth-child(3) { animation-delay: -0.4s; }
+    @keyframes eqAnim { 0% { height: 20%; } 100% { height: 100%; } }
 
+    /* Экраны Авторизации */
+    .auth-card {
+      background: var(--bg-glass-heavy);
+      backdrop-filter: blur(40px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      max-width: 400px;
+      margin: 20px auto;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      animation: slideUp 0.4s var(--ease-spring);
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    .auth-title { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 24px; }
+    .field-group { margin-bottom: 16px; }
+    .field-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+    
+    .cyber-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-glass);
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+    .cyber-input:focus { border-color: var(--accent-cyan); box-shadow: var(--neon-cyan); }
+
+    .cyber-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: var(--neon-cyan);
+      transition: all 0.2s;
+    }
+    .cyber-btn:active { transform: scale(0.97); }
+
+    /* Мини плеер */
     .mini-player {
       position: fixed;
-      bottom: 68px; left: 10px; right: 10px;
-      height: 64px;
-      background: rgba(18, 18, 32, 0.88);
+      bottom: 75px;
+      left: 12px;
+      right: 12px;
+      height: 68px;
+      background: rgba(10, 8, 28, 0.88);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border-glow);
-      box-shadow: var(--shadow);
+      border-radius: 22px;
+      border: 1px solid var(--border-glass);
       display: flex;
       align-items: center;
       padding: 0 12px;
       gap: 12px;
       z-index: 90;
-      transition: all 0.3s var(--ease-spring);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+      cursor: pointer;
+      animation: popIn 0.3s var(--ease-spring);
     }
-    .mini-cover { width: 44px; height: 44px; border-radius: var(--radius-md); object-fit: cover; }
-    .mini-info { flex: 1; min-width: 0; cursor: pointer; }
-    .mini-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mini-artist { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    @keyframes popIn { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+    .mini-cover { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; }
+    .mini-meta { flex: 1; min-width: 0; }
     
-    .btn-play-trigger {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      color: #fff; border: none; font-size: 16px;
-      display: grid; place-items: center; cursor: pointer;
-      box-shadow: 0 0 15px var(--accent-glow);
-      transition: transform 0.2s var(--ease-spring);
+    .play-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: var(--neon-cyan);
+      flex-shrink: 0;
     }
-    .btn-play-trigger:active { transform: scale(0.88); }
 
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
-      background: var(--bg-panel); border-top: 1px solid var(--border);
-      display: flex; justify-content: space-around; align-items: center;
-      z-index: 100; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    /* Навигация */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-top: 1px solid var(--border-glass);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
     }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      color: var(--text-muted); font-size: 10px; font-weight: 600;
-      cursor: pointer; transition: all 0.2s ease; width: 25%;
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-sub);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .nav-item span { font-size: 18px; transition: transform 0.2s var(--ease-spring); }
-    .nav-item.active { color: var(--accent); font-weight: 800; }
-    .nav-item.active span { transform: translateY(-2px) scale(1.1); }
+    .nav-btn.active { color: var(--accent-cyan); text-shadow: var(--neon-cyan); }
+    .nav-btn span { font-size: 20px; }
 
+    /* Полноэкранный плеер (Модальное окно) */
     .full-player {
-      position: fixed; inset: 0; z-index: 200;
-      background: var(--bg-main);
-      display: flex; flex-direction: column; justify-content: space-between;
-      padding: 24px 24px 40px 24px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-dark);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
       transform: translateY(100%);
-      transition: transform 0.4s var(--ease-smooth);
-      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
     }
     .full-player.open { transform: translateY(0); }
-    .full-player-bg {
-      position: absolute; inset: -20px;
-      background-size: cover; background-position: center;
-      filter: blur(60px) brightness(0.3); z-index: -1;
-      transition: background-image 0.5s ease;
-    }
-    .full-header { display: flex; justify-content: space-between; align-items: center; }
-    .full-cover-wrap {
-      width: 100%; aspect-ratio: 1; max-width: 300px; margin: 0 auto;
-      border-radius: var(--radius-lg); overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8); border: 1px solid var(--border);
-    }
-    .full-cover { width: 100%; height: 100%; object-fit: cover; }
-    .full-title { font-size: 20px; font-weight: 800; text-align: center; margin-top: 10px; }
-    .full-artist { font-size: 13px; color: var(--text-muted); text-align: center; margin-top: 4px; }
 
-    .progress-area { margin: 10px 0; }
-    .progress-bar-container {
-      width: 100%; height: 6px; background: rgba(255,255,255,0.1);
-      border-radius: 10px; cursor: pointer; position: relative; overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--purple));
-      border-radius: 10px; transition: width 0.1s linear;
-    }
-    .time-stamps { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+    .fp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .fp-cover-wrap { width: 85vw; max-width: 320px; aspect-ratio: 1; margin: 20px auto; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 20px 50px rgba(0, 242, 254, 0.2); border: 1px solid var(--border-glass); }
+    .fp-cover { width: 100%; height: 100%; object-fit: cover; }
 
-    .full-controls { display: flex; justify-content: space-around; align-items: center; margin-top: 10px; }
-    .btn-control { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; transition: transform 0.2s var(--ease-spring); }
-    .btn-control:active { transform: scale(0.85); }
-    .btn-control-main {
-      width: 60px; height: 60px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--purple));
-      color: #fff; border: none; font-size: 24px;
-      display: grid; place-items: center; box-shadow: 0 0 25px var(--accent-glow);
+    .fp-meta { text-align: center; margin-bottom: 20px; }
+    .fp-title { font-size: 22px; font-weight: 800; }
+    .fp-artist { font-size: 14px; color: var(--text-sub); margin-top: 4px; }
+
+    /* Ползунки времени и громкости */
+    .progress-area { margin-bottom: 20px; }
+    .time-slider, .volume-slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+    }
+    .time-slider::-webkit-slider-thumb, .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: var(--neon-cyan);
+      cursor: pointer;
     }
 
-    /* Админка и Загрузка Файлов */
-    .form-card {
-      background: var(--bg-panel); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px;
-    }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .form-input {
-      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
-      padding: 12px 14px; border-radius: var(--radius-sm); color: #fff; outline: none;
-      font-size: 13px; transition: border-color 0.2s ease;
-    }
-    .form-input:focus { border-color: var(--accent); }
-    
-    /* Переключатель источника */
-    .source-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
-    .source-btn {
-      flex: 1; padding: 8px; font-size: 11px; font-weight: 700; border-radius: var(--radius-sm);
-      border: 1px solid var(--border); background: var(--bg-input); color: var(--text-muted);
-      cursor: pointer; text-align: center;
-    }
-    .source-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .time-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); margin-top: 8px; }
 
-    .file-input-btn {
-      display: block; width: 100%; padding: 12px; text-align: center;
-      background: rgba(255, 255, 255, 0.05); border: 1px dashed var(--accent);
-      border-radius: var(--radius-sm); color: var(--accent); font-size: 12px; font-weight: 700;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .file-input-btn:active { background: rgba(0, 242, 254, 0.1); }
+    .fp-controls { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 30px; }
+    .fp-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+    .fp-btn-main { width: 64px; height: 64px; font-size: 24px; }
 
-    .btn-action {
-      width: 100%; background: linear-gradient(135deg, var(--accent), var(--purple));
-      color: #fff; font-weight: 800; padding: 12px; border-radius: var(--radius-sm);
-      border: none; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px var(--accent-glow);
-      transition: transform 0.2s var(--ease-spring); margin-top: 8px;
-    }
-    .btn-action:active { transform: scale(0.97); }
-
-    .modal {
-      position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal.active { display: flex; animation: modalIn 0.3s var(--ease-spring); }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    .modal-box { background: var(--bg-panel); border: 1px solid var(--border-glow); border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 320px; }
+    .volume-wrap { display: flex; align-items: center; gap: 12px; color: var(--text-sub); }
   </style>
 </head>
 <body>
 
-  <div class="bg-glow bg-glow-1"></div>
-  <div class="bg-glow bg-glow-2"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-  <div class="app-container">
-    <div class="header">
-      <div class="brand">
-        <div class="brand-dot"></div>
-        <span>Mono.Music</span>
-      </div>
-      <div class="role-badge">Администратор</div>
+  <div class="app-viewport">
+    <div class="top-bar">
+      <div class="logo"><div class="logo-badge"></div>Mono.Music</div>
+      <div class="user-pill" id="user-pill" onclick="switchTab('auth')">👤 Войти</div>
     </div>
 
-    <div class="viewport" id="viewport"></div>
+    <div class="content-area" id="main-content"></div>
 
-    <div class="mini-player" id="mini-player" style="display: none;">
-      <img class="mini-cover" id="m-cover" src="" onclick="openFullPlayer()">
-      <div class="mini-info" onclick="openFullPlayer()">
-        <div class="mini-title" id="m-title">-</div>
-        <div class="mini-artist" id="m-artist">-</div>
+    <!-- Мини-плеер -->
+    <div class="mini-player" id="mini-player" style="display:none;" onclick="openFullPlayer()">
+      <img class="mini-cover" id="m-cover" src="">
+      <div class="mini-meta">
+        <div style="font-size:13px; font-weight:700;" id="m-title">-</div>
+        <div style="font-size:11px; color:var(--text-sub);" id="m-artist">-</div>
       </div>
-      <button class="btn-icon" id="m-fav-btn" onclick="toggleFavCurrent()">♡</button>
-      <button class="btn-play-trigger" id="m-play-btn" onclick="togglePlay()">▶</button>
+      <div id="m-eq" class="eq-bar-wrap" style="display:none;">
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      </div>
+      <button class="play-circle" id="m-play-btn" onclick="event.stopPropagation(); togglePlay()">▶</button>
     </div>
 
-    <div class="bottom-nav">
-      <div class="nav-item active" data-tab="home" onclick="switchTab('home')">
-        <span>🏠</span>Главная
-      </div>
-      <div class="nav-item" data-tab="playlists" onclick="switchTab('playlists')">
-        <span>📂</span>Плейлисты
-      </div>
-      <div class="nav-item" data-tab="favorites" onclick="switchTab('favorites')">
-        <span>❤️</span>Избранное
-      </div>
-      <div class="nav-item" data-tab="admin" onclick="switchTab('admin')">
-        <span>🛠</span>Админ
-      </div>
+    <!-- Навигация -->
+    <div class="bottom-bar">
+      <div class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span>⚡</span>Главная</div>
+      <div class="nav-btn" data-tab="favs" onclick="switchTab('favs')"><span>❤️</span>Избранное</div>
+      <div class="nav-btn" data-tab="offline" onclick="switchTab('offline')"><span>💾</span>Оффлайн</div>
+      <div class="nav-btn" data-tab="auth" onclick="switchTab('auth')"><span>👤</span>Профиль</div>
     </div>
   </div>
 
+  <!-- Полноэкранный плеер -->
   <div class="full-player" id="full-player">
-    <div class="full-player-bg" id="fp-bg"></div>
-    <div class="full-header">
-      <button class="btn-icon" onclick="closeFullPlayer()">🔽</button>
-      <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Сейчас играет</span>
-      <button class="btn-icon" id="fp-fav-btn" onclick="toggleFavCurrent()">♡</button>
+    <div class="fp-header">
+      <button class="fp-btn" onclick="closeFullPlayer()">✕</button>
+      <div style="font-size:12px; font-weight:700; color:var(--text-sub);">СЕЙЧАС ИГРАЕТ</div>
+      <button class="fp-btn" id="fp-fav-btn" onclick="toggleFavCurrent()">♡</button>
+    </div>
+    
+    <div class="fp-cover-wrap">
+      <img class="fp-cover" id="fp-cover" src="">
     </div>
 
-    <div class="full-cover-wrap">
-      <img class="full-cover" id="fp-cover" src="">
-    </div>
-
-    <div>
-      <div class="full-title" id="fp-title">-</div>
-      <div class="full-artist" id="fp-artist">-</div>
+    <div class="fp-meta">
+      <div class="fp-title" id="fp-title">-</div>
+      <div class="fp-artist" id="fp-artist">-</div>
     </div>
 
     <div class="progress-area">
-      <div class="progress-bar-container" id="progress-container" onclick="seekTrack(event)">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-      <div class="time-stamps">
-        <span id="curr-time">0:00</span>
-        <span id="total-time">0:00</span>
+      <input type="range" class="time-slider" id="fp-progress" value="0" min="0" max="100" oninput="seekAudio(this.value)">
+      <div class="time-labels">
+        <span id="fp-curr-time">0:00</span>
+        <span id="fp-dur-time">0:00</span>
       </div>
     </div>
 
-    <div class="full-controls">
-      <button class="btn-control" id="shuffle-btn" onclick="toggleShuffle()">🔀</button>
-      <button class="btn-control" onclick="prevTrack()">⏮</button>
-      <button class="btn-control-main" id="fp-play-btn" onclick="togglePlay()">▶</button>
-      <button class="btn-control" onclick="nextTrack()">⏭</button>
-      <button class="btn-control" id="repeat-btn" onclick="toggleRepeat()">🔁</button>
+    <div class="fp-controls">
+      <button class="fp-btn" onclick="prevTrack()">⏮</button>
+      <button class="play-circle fp-btn-main" id="fp-play-btn" onclick="togglePlay()">▶</button>
+      <button class="fp-btn" onclick="nextTrack()">⏭</button>
     </div>
-  </div>
 
-  <div class="modal" id="playlist-modal">
-    <div class="modal-box">
-      <div style="font-weight: 800; font-size: 16px; margin-bottom: 12px;">Добавить в плейлист</div>
-      <div class="form-group">
-        <label>Имя плейлиста</label>
-        <input class="form-input" id="modal-pl-name" placeholder="Например: В дорогу">
-      </div>
-      <button class="btn-action" onclick="confirmPlaylistAdd()">Сохранить</button>
-      <button class="btn-action" style="background: transparent; border: 1px solid var(--border); box-shadow: none; margin-top: 6px;" onclick="closeModal()">Отмена</button>
+    <div class="volume-wrap">
+      <span>🔈</span>
+      <input type="range" class="volume-slider" id="fp-volume" value="100" min="0" max="100" oninput="setVolume(this.value)">
+      <span>🔊</span>
     </div>
   </div>
 
   <script>
+    // Регистрация ServiceWorker для Оффлайн-режима
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
     const audio = new Audio();
-    
-    const defaultData = {
-      activeTab: 'home',
-      currentTrackId: null,
+    audio.loop = false;
+
+    // Конфигурация GitHub-репозитория
+    const GITHUB_USER = 'bomba33345-sudo';
+    const GITHUB_REPO = 'frame.github.io';
+    const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/`;
+    const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/assets`;
+
+    let appState = {
+      user: JSON.parse(localStorage.getItem('mono_user')) || null,
+      currentTab: 'home',
+      currentTrack: null,
       isPlaying: false,
-      isShuffle: false,
-      isRepeat: false,
-      editingTrackId: null,
-      selectedTrackForPl: null,
-      audioSourceMode: 'file', // 'file' или 'url'
-      tempAudioData: '',
-      tempCoverData: '',
-      favorites: [],
-      playlists: [
-        { id: 'p1', title: 'Cyberpunk Drive', trackIds: [] }
-      ],
-      tracks: [
-        { id: '1', title: 'Demo Synth', artist: 'Sound Helix', src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', cover: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&q=80' }
-      ]
+      favorites: JSON.parse(localStorage.getItem('mono_favs')) || [],
+      tracks: []
     };
 
-    let state = JSON.parse(localStorage.getItem('mono_music_state')) || defaultData;
-
-    function saveState() {
+    // Автоматическая подгрузка треков из GitHub API
+    async function loadTracksFromGitHub() {
       try {
-        localStorage.setItem('mono_music_state', JSON.stringify({
-          tracks: state.tracks,
-          playlists: state.playlists,
-          favorites: state.favorites
-        }));
+        const res = await fetch(GITHUB_API_URL);
+        if (!res.ok) throw new Error('API limits');
+        const files = await res.json();
+        
+        const audioFiles = files.filter(f => f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
+        
+        if (audioFiles.length > 0) {
+          appState.tracks = audioFiles.map((file, idx) => {
+            const baseName = file.name.substring(0, file.name.lastIndexOf('.'));
+            return {
+              id: String(idx + 1),
+              title: baseName.replace(/_/g, ' '),
+              artist: 'GitHub Asset',
+              src: file.download_url,
+              cover: GITHUB_RAW_BASE + baseName + '.jpg'
+            };
+          });
+        } else {
+          useFallbackTracks();
+        }
       } catch (e) {
-        console.warn("Превышен лимит LocalStorage (при слишком больших аудиозаписях).");
+        console.warn("GitHub API не отвечает, переключаемся на заготовленный список assets", e);
+        useFallbackTracks();
       }
-    }
-
-    function render() {
-      const vp = document.getElementById('viewport');
-      
-      if (state.activeTab === 'home') {
-        vp.innerHTML = `
-          <div class="view-section">
-            <div class="section-title">В тренде 🔥</div>
-            <div class="cards-scroll">
-              ${state.tracks.map(t => `
-                <div class="card ${state.currentTrackId === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
-                  <div class="card-img-wrap">
-                    <img class="card-img" src="${t.cover}">
-                    <div class="card-play-overlay">▶</div>
-                  </div>
-                  <div class="card-title">${t.title}</div>
-                  <div class="card-artist">${t.artist}</div>
-                </div>
-              `).join('')}
-            </div>
-
-            <div class="section-title">Все медиафайлы</div>
-            ${renderTrackList(state.tracks)}
-          </div>
-        `;
-      } 
-      else if (state.activeTab === 'playlists') {
-        vp.innerHTML = `
-          <div class="view-section">
-            <div class="section-title">Мои плейлисты 📁</div>
-            ${state.playlists.map(p => `
-              <div class="form-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                  <div>
-                    <div style="font-weight:800; font-size:16px;">${p.title}</div>
-                    <div style="font-size:12px; color:var(--text-muted);">Треков: ${p.trackIds.length}</div>
-                  </div>
-                  <button class="btn-icon" style="color:var(--danger)" onclick="deletePlaylist('${p.id}')">🗑</button>
-                </div>
-                ${renderTrackList(state.tracks.filter(t => p.trackIds.includes(t.id)))}
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-      else if (state.activeTab === 'favorites') {
-        const favs = state.tracks.filter(t => state.favorites.includes(t.id));
-        vp.innerHTML = `
-          <div class="view-section">
-            <div class="section-title">Избранное ❤️ (${favs.length})</div>
-            ${renderTrackList(favs)}
-          </div>
-        `;
-      }
-      else if (state.activeTab === 'admin') {
-        const editItem = state.tracks.find(t => t.id === state.editingTrackId);
-        const isFileMode = state.audioSourceMode === 'file';
-
-        vp.innerHTML = `
-          <div class="view-section">
-            <div class="section-title">${editItem ? '✏️ Редактировать' : '➕ Добавить песню'}</div>
-            <div class="form-card">
-              <div class="source-tabs">
-                <div class="source-btn ${isFileMode ? 'active' : ''}" onclick="setSourceMode('file')">📂 С компьютера / телефона</div>
-                <div class="source-btn ${!isFileMode ? 'active' : ''}" onclick="setSourceMode('url')">🔗 Прямая URL-ссылка</div>
-              </div>
-
-              <div class="form-group"><label>Название</label><input class="form-input" id="a-title" placeholder="Song Title" value="${editItem ? editItem.title : ''}"></div>
-              <div class="form-group"><label>Исполнитель</label><input class="form-input" id="a-artist" placeholder="Artist Name" value="${editItem ? editItem.artist : ''}"></div>
-
-              ${isFileMode ? `
-                <div class="form-group">
-                  <label>Аудиофайл (.mp3, .wav, .m4a)</label>
-                  <label class="file-input-btn" id="audio-file-label">
-                    🎵 Выбрать аудиофайл
-                    <input type="file" id="a-file-audio" accept="audio/*" style="display:none;" onchange="handleAudioSelect(event)">
-                  </label>
-                </div>
-                <div class="form-group">
-                  <label>Обложка (необязательно)</label>
-                  <label class="file-input-btn" id="cover-file-label" style="border-color: var(--purple); color: #fff;">
-                    🖼 Выбрать обложку
-                    <input type="file" id="a-file-cover" accept="image/*" style="display:none;" onchange="handleCoverSelect(event)">
-                  </label>
-                </div>
-              ` : `
-                <div class="form-group"><label>URL аудио</label><input class="form-input" id="a-src" placeholder="https://domain.com/song.mp3" value="${editItem ? editItem.src : ''}"></div>
-                <div class="form-group"><label>URL обложки</label><input class="form-input" id="a-cover" placeholder="https://domain.com/image.jpg" value="${editItem ? editItem.cover : ''}"></div>
-              `}
-
-              <button class="btn-action" onclick="saveAdminTrack()">${editItem ? 'Сохранить изменения' : 'Загрузить в плеер'}</button>
-              ${editItem ? `<button class="btn-action" style="background:transparent; border:1px solid var(--border); box-shadow:none; margin-top:6px;" onclick="cancelEdit()">Отмена</button>` : ''}
-            </div>
-
-            <div class="section-title">Треки (${state.tracks.length})</div>
-            ${state.tracks.map(t => `
-              <div class="track-row">
-                <img class="row-cover" src="${t.cover}">
-                <div class="row-info">
-                  <div class="row-title">${t.title}</div>
-                  <div class="row-artist">${t.artist}</div>
-                </div>
-                <div class="row-actions">
-                  <button class="btn-icon" onclick="startEdit('${t.id}')">✏️</button>
-                  <button class="btn-icon" onclick="openPlaylistModal('${t.id}')">📂</button>
-                  <button class="btn-icon" style="color:var(--danger);" onclick="deleteTrack('${t.id}')">🗑</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-    }
-
-    function renderTrackList(list) {
-      if(!list.length) return `<div style="color:var(--text-muted); text-align:center; padding:20px; font-size:13px;">Список пуст</div>`;
-      return list.map(t => {
-        const isActive = state.currentTrackId === t.id;
-        const isFav = state.favorites.includes(t.id);
-        return `
-          <div class="track-row ${isActive ? 'active' : ''}" onclick="playTrack('${t.id}')">
-            <img class="row-cover" src="${t.cover}">
-            <div class="row-info">
-              <div class="row-title">${t.title}</div>
-              <div class="row-artist">${t.artist}</div>
-            </div>
-            ${isActive && state.isPlaying ? `
-              <div class="eq-bar-wrap">
-                <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-              </div>
-            ` : ''}
-            <button class="btn-icon ${isFav ? 'fav-active' : ''}" onclick="event.stopPropagation(); toggleFav('${t.id}')">
-              ${isFav ? '❤️' : '♡'}
-            </button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    /* Работа с файлами через FileReader */
-    function setSourceMode(mode) {
-      state.audioSourceMode = mode;
-      state.tempAudioData = '';
-      state.tempCoverData = '';
       render();
     }
 
-    function handleAudioSelect(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        state.tempAudioData = evt.target.result;
-        document.getElementById('audio-file-label').textContent = '✅ Выбран: ' + file.name;
-      };
-      reader.readAsDataURL(file);
+    function useFallbackTracks() {
+      appState.tracks = [
+        { id: '1', title: 'Song 1', artist: 'Artist 1', src: GITHUB_RAW_BASE + 'song1.mp3', cover: GITHUB_RAW_BASE + 'cover1.jpg' },
+        { id: '2', title: 'Song 2', artist: 'Artist 2', src: GITHUB_RAW_BASE + 'song2.mp3', cover: GITHUB_RAW_BASE + 'cover2.jpg' }
+      ];
     }
 
-    function handleCoverSelect(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        state.tempCoverData = evt.target.result;
-        document.getElementById('cover-file-label').textContent = '✅ Картинка: ' + file.name;
-      };
-      reader.readAsDataURL(file);
-    }
+    /* РЕНДЕРИНГ ЭКРАНОВ */
+    function render() {
+      const view = document.getElementById('main-content');
+      const userPill = document.getElementById('user-pill');
+      userPill.textContent = appState.user ? `👤 ${appState.user.name}` : '👤 Войти';
 
-    /* Воспроизведение */
-    function playTrack(id) {
-      const t = state.tracks.find(x => x.id === id); if(!t) return;
-      if (state.currentTrackId !== id) {
-        state.currentTrackId = id;
-        audio.src = t.src;
+      if (appState.currentTab === 'home') {
+        view.innerHTML = `
+          <div class="section-head">Тренды GitHub Assets 🔥 <span>Все</span></div>
+          <div class="track-grid">
+            ${appState.tracks.map(t => `
+              <div class="cyber-card ${appState.currentTrack && appState.currentTrack.id === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
+                <div class="card-cover-wrap">
+                  <img class="card-cover" src="${t.cover}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500'">
+                </div>
+                <div class="card-title">${t.title}</div>
+                <div class="card-artist">${t.artist}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="section-head">Все Треки (${appState.tracks.length})</div>
+          ${renderTrackRows(appState.tracks)}
+        `;
+      } 
+      else if (appState.currentTab === 'auth') {
+        if (appState.user) {
+          view.innerHTML = `
+            <div class="auth-card">
+              <div class="auth-title">Профиль: ${appState.user.name}</div>
+              <p style="text-align:center; color:var(--text-sub); margin-bottom:20px; font-size:13px;">Синхронизация активна. Доступ к оффлайн трекам разрешен.</p>
+              <button class="cyber-btn" style="background:linear-gradient(135deg, #ff007f, var(--accent-purple));" onclick="logout()">Выйти из аккаунта</button>
+            </div>
+          `;
+        } else {
+          view.innerHTML = `
+            <div class="auth-card">
+              <div class="auth-title">Вход / Регистрация</div>
+              <div class="field-group">
+                <label>Никнейм или Email</label>
+                <input class="cyber-input" id="auth-name" placeholder="cyber_user">
+              </div>
+              <div class="field-group">
+                <label>Пароль</label>
+                <input class="cyber-input" type="password" id="auth-pass" placeholder="••••••••">
+              </div>
+              <button class="cyber-btn" onclick="login()">Продолжить</button>
+            </div>
+          `;
+        }
       }
+      else if (appState.currentTab === 'favs') {
+        const favList = appState.tracks.filter(t => appState.favorites.includes(t.id));
+        view.innerHTML = `<div class="section-head">Избранное ❤️ (${favList.length})</div>${renderTrackRows(favList)}`;
+      }
+      else if (appState.currentTab === 'offline') {
+        view.innerHTML = `
+          <div class="section-head">Оффлайн кэш 💾</div>
+          <p style="color:var(--text-sub); font-size:12px; margin-bottom:15px; line-height:1.4;">Все прослушанные треки автоматически сохраняются ServiceWorker и запускаются без подключения к интернету.</p>
+          ${renderTrackRows(appState.tracks)}
+        `;
+      }
+    }
+
+    function renderTrackRows(list) {
+      if (!list.length) return `<div style="color:var(--text-sub); text-align:center; padding:40px; font-size:13px;">Список пуст</div>`;
+      return list.map(t => `
+        <div class="track-row ${appState.currentTrack && appState.currentTrack.id === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
+          <img class="row-cover" src="${t.cover}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500'">
+          <div class="row-meta">
+            <div class="row-title">${t.title}</div>
+            <div class="row-artist">${t.artist}</div>
+          </div>
+          <button class="icon-btn" onclick="event.stopPropagation(); toggleFav('${t.id}')">
+            ${appState.favorites.includes(t.id) ? '❤️' : '♡'}
+          </button>
+        </div>
+      `).join('');
+    }
+
+    /* ЛОГИКА ПЛЕЕРА И АУДИО */
+    function playTrack(id) {
+      const t = appState.tracks.find(x => x.id === id); 
+      if (!t) return;
+      appState.currentTrack = t;
+      audio.src = t.src;
       audio.play().then(() => {
-        state.isPlaying = true;
-        updateUI();
-      }).catch(err => alert("Ошибка воспроизведения. Попробуйте перезагрузить трек."));
+        appState.isPlaying = true;
+        setupMediaSession(t);
+        updatePlayerUI();
+      }).catch(e => console.log("Фоновый режим готов к воспроизведению"));
     }
 
     function togglePlay() {
-      if (!state.currentTrackId && state.tracks.length) {
-        playTrack(state.tracks[0].id);
-        return;
+      if (!appState.currentTrack && appState.tracks.length) return playTrack(appState.tracks[0].id);
+      if (appState.isPlaying) { 
+        audio.pause(); 
+        appState.isPlaying = false; 
+      } else { 
+        audio.play(); 
+        appState.isPlaying = true; 
       }
-      if (state.isPlaying) {
-        audio.pause();
-        state.isPlaying = false;
-      } else {
-        audio.play();
-        state.isPlaying = true;
-      }
-      updateUI();
+      updatePlayerUI();
     }
 
     function nextTrack() {
-      if (!state.tracks.length) return;
-      let currentIndex = state.tracks.findIndex(t => t.id === state.currentTrackId);
-      let nextIndex = state.isShuffle ? Math.floor(Math.random() * state.tracks.length) : (currentIndex + 1) % state.tracks.length;
-      playTrack(state.tracks[nextIndex].id);
+      if (!appState.currentTrack) return;
+      const currIdx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
+      const nextIdx = (currIdx + 1) % appState.tracks.length;
+      playTrack(appState.tracks[nextIdx].id);
     }
 
     function prevTrack() {
-      if (!state.tracks.length) return;
-      let currentIndex = state.tracks.findIndex(t => t.id === state.currentTrackId);
-      let prevIndex = (currentIndex - 1 + state.tracks.length) % state.tracks.length;
-      playTrack(state.tracks[prevIndex].id);
+      if (!appState.currentTrack) return;
+      const currIdx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
+      const prevIdx = (currIdx - 1 + appState.tracks.length) % appState.tracks.length;
+      playTrack(appState.tracks[prevIdx].id);
     }
 
-    audio.onended = () => {
-      if (state.isRepeat) {
-        audio.currentTime = 0;
-        audio.play();
-      } else {
-        nextTrack();
-      }
-    };
+    function updatePlayerUI() {
+      if (!appState.currentTrack) return;
+      
+      // Обновление мини-плеера
+      document.getElementById('mini-player').style.display = 'flex';
+      document.getElementById('m-cover').src = appState.currentTrack.cover;
+      document.getElementById('m-title').textContent = appState.currentTrack.title;
+      document.getElementById('m-artist').textContent = appState.currentTrack.artist;
+      document.getElementById('m-play-btn').textContent = appState.isPlaying ? '⏸' : '▶';
+      document.getElementById('m-eq').style.display = appState.isPlaying ? 'flex' : 'none';
 
+      // Обновление полноэкранного плеера
+      document.getElementById('fp-cover').src = appState.currentTrack.cover;
+      document.getElementById('fp-title').textContent = appState.currentTrack.title;
+      document.getElementById('fp-artist').textContent = appState.currentTrack.artist;
+      document.getElementById('fp-play-btn').textContent = appState.isPlaying ? '⏸' : '▶';
+      document.getElementById('fp-fav-btn').textContent = appState.favorites.includes(appState.currentTrack.id) ? '❤️' : '♡';
+
+      render();
+    }
+
+    /* ТАЙМЕРЫ И ПОЛЗУНКИ */
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
       const pct = (audio.currentTime / audio.duration) * 100;
-      document.getElementById('progress-fill').style.width = pct + '%';
-      document.getElementById('curr-time').textContent = formatTime(audio.currentTime);
-      document.getElementById('total-time').textContent = formatTime(audio.duration);
+      document.getElementById('fp-progress').value = pct;
+      document.getElementById('fp-curr-time').textContent = formatTime(audio.currentTime);
+      document.getElementById('fp-dur-time').textContent = formatTime(audio.duration);
     };
 
-    function seekTrack(e) {
-      const rect = document.getElementById('progress-container').getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = pos * audio.duration;
+    audio.onended = () => {
+      nextTrack();
+    };
+
+    function seekAudio(val) {
+      if (!audio.duration) return;
+      audio.currentTime = (val / 100) * audio.duration;
+    }
+
+    function setVolume(val) {
+      audio.volume = val / 100;
     }
 
     function formatTime(sec) {
-      let m = Math.floor(sec / 60);
-      let s = Math.floor(sec % 60);
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    function updateUI() {
-      const t = state.tracks.find(x => x.id === state.currentTrackId);
-      if (!t) return;
+    /* МОДАЛЬНЫЙ ПЛЕЕР */
+    function openFullPlayer() {
+      document.getElementById('full-player').classList.add('open');
+    }
+    function closeFullPlayer() {
+      document.getElementById('full-player').classList.remove('open');
+    }
 
-      document.getElementById('mini-player').style.display = 'flex';
-      document.getElementById('m-cover').src = t.cover;
-      document.getElementById('m-title').textContent = t.title;
-      document.getElementById('m-artist').textContent = t.artist;
-      document.getElementById('m-play-btn').textContent = state.isPlaying ? '⏸' : '▶';
+    /* УПРАВЛЕНИЕ МЕДИАСЕССИЕЙ НА ЭКРАНЕ БЛОКИРОВКИ */
+    function setupMediaSession(track) {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.title,
+          artist: track.artist,
+          artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
+        });
+        navigator.mediaSession.setActionHandler('play', () => togglePlay());
+        navigator.mediaSession.setActionHandler('pause', () => togglePlay());
+        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+      }
+    }
 
-      document.getElementById('fp-cover').src = t.cover;
-      document.getElementById('fp-title').textContent = t.title;
-      document.getElementById('fp-artist').textContent = t.artist;
-      document.getElementById('fp-bg').style.backgroundImage = `url(${t.cover})`;
-      document.getElementById('fp-play-btn').textContent = state.isPlaying ? '⏸' : '▶';
+    /* АВТОРИЗАЦИЯ И ИЗБРАННОЕ */
+    function login() {
+      const name = document.getElementById('auth-name').value.trim();
+      if (!name) return alert('Введите ваш логин');
+      appState.user = { name };
+      localStorage.setItem('mono_user', JSON.stringify(appState.user));
+      render();
+    }
 
-      const isFav = state.favorites.includes(t.id);
-      document.getElementById('m-fav-btn').textContent = isFav ? '❤️' : '♡';
-      document.getElementById('fp-fav-btn').textContent = isFav ? '❤️' : '♡';
-
+    function logout() {
+      appState.user = null;
+      localStorage.removeItem('mono_user');
       render();
     }
 
     function toggleFav(id) {
-      const idx = state.favorites.indexOf(id);
-      if(idx > -1) state.favorites.splice(idx, 1);
-      else state.favorites.push(id);
-      saveState();
-      updateUI();
+      const idx = appState.favorites.indexOf(id);
+      if (idx > -1) appState.favorites.splice(idx, 1);
+      else appState.favorites.push(id);
+      localStorage.setItem('mono_favs', JSON.stringify(appState.favorites));
+      updatePlayerUI();
     }
 
     function toggleFavCurrent() {
-      if (state.currentTrackId) toggleFav(state.currentTrackId);
+      if (appState.currentTrack) toggleFav(appState.currentTrack.id);
     }
-
-    function toggleShuffle() {
-      state.isShuffle = !state.isShuffle;
-      document.getElementById('shuffle-btn').style.color = state.isShuffle ? 'var(--accent)' : '#fff';
-    }
-
-    function toggleRepeat() {
-      state.isRepeat = !state.isRepeat;
-      document.getElementById('repeat-btn').style.color = state.isRepeat ? 'var(--accent)' : '#fff';
-    }
-
-    function openFullPlayer() { document.getElementById('full-player').classList.add('open'); }
-    function closeFullPlayer() { document.getElementById('full-player').classList.remove('open'); }
 
     function switchTab(tab) {
-      state.activeTab = tab;
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      appState.currentTab = tab;
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
       render();
     }
 
-    function startEdit(id) { state.editingTrackId = id; render(); }
-    function cancelEdit() { state.editingTrackId = null; render(); }
-
-    function saveAdminTrack() {
-      const title = document.getElementById('a-title').value.trim();
-      const artist = document.getElementById('a-artist').value.trim();
-      let src = '';
-      let cover = '';
-
-      if (state.audioSourceMode === 'file') {
-        src = state.tempAudioData;
-        cover = state.tempCoverData || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80';
-      } else {
-        src = document.getElementById('a-src').value.trim();
-        cover = document.getElementById('a-cover').value.trim() || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80';
-      }
-
-      if(!title || !artist || !src) return alert('Пожалуйста, заполните все поля и выберите аудиофайл.');
-
-      if(state.editingTrackId) {
-        const t = state.tracks.find(x => x.id === state.editingTrackId);
-        t.title = title; t.artist = artist; if(src) t.src = src; if(cover) t.cover = cover;
-        state.editingTrackId = null;
-      } else {
-        state.tracks.push({ id: Date.now().toString(), title, artist, src, cover });
-      }
-
-      state.tempAudioData = '';
-      state.tempCoverData = '';
-      saveState();
-      render();
-    }
-
-    function deleteTrack(id) {
-      state.tracks = state.tracks.filter(t => t.id !== id);
-      state.playlists.forEach(p => p.trackIds = p.trackIds.filter(tId => tId !== id));
-      if (state.currentTrackId === id) {
-        audio.pause();
-        state.isPlaying = false;
-        state.currentTrackId = null;
-        document.getElementById('mini-player').style.display = 'none';
-      }
-      saveState();
-      render();
-    }
-
-    function openPlaylistModal(trackId) {
-      state.selectedTrackForPl = trackId;
-      document.getElementById('playlist-modal').classList.add('active');
-    }
-    function closeModal() { document.getElementById('playlist-modal').classList.remove('active'); }
-
-    function confirmPlaylistAdd() {
-      const name = document.getElementById('modal-pl-name').value.trim();
-      if(!name) return alert('Введите имя плейлиста');
-      
-      let pl = state.playlists.find(p => p.title.toLowerCase() === name.toLowerCase());
-      if(!pl) {
-        pl = { id: Date.now().toString(), title: name, trackIds: [] };
-        state.playlists.push(pl);
-      }
-      if(!pl.trackIds.includes(state.selectedTrackForPl)) {
-        pl.trackIds.push(state.selectedTrackForPl);
-      }
-      saveState();
-      closeModal();
-      render();
-    }
-
-    function deletePlaylist(id) {
-      state.playlists = state.playlists.filter(p => p.id !== id);
-      saveState();
-      render();
-    }
-
-    render();
+    // Инициализация
+    loadTracksFromGitHub();
   </script>
 </body>
 </html>
