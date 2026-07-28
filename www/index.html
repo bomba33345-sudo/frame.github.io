@@ -4,38 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#030014">
-  <title>Mono.Music</title>
+  <title>Mono.Music Cyber Elite Pro Ultra</title>
   <style>
     :root {
       --bg-dark: #02000a;
       --bg-glass: rgba(12, 10, 32, 0.75);
       --bg-glass-heavy: rgba(8, 6, 22, 0.92);
       --bg-card: rgba(255, 255, 255, 0.035);
-      --bg-card-hover: rgba(255, 255, 255, 0.08);
       --accent-cyan: #00f2fe;
-      --accent-blue: #4facfe;
       --accent-purple: #7f00ff;
-      --accent-pink: #ff007f;
       --neon-cyan: 0 0 20px rgba(0, 242, 254, 0.6);
-      --neon-pink: 0 0 20px rgba(255, 0, 127, 0.6);
-      --neon-purple: 0 0 25px rgba(127, 0, 255, 0.6);
       --text-main: #ffffff;
       --text-sub: #9ca3af;
       --border-glass: rgba(255, 255, 255, 0.12);
-      --border-active: rgba(0, 242, 254, 0.4);
       --radius-xl: 32px;
       --radius-lg: 20px;
       --radius-md: 14px;
-      --radius-sm: 10px;
       --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
@@ -46,63 +38,19 @@
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      position: relative;
-    }
-
-    /* Фоны и свечения */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-      animation: floatOrb 14s infinite alternate ease-in-out;
-    }
-    .orb-1 {
-      top: -15%;
-      left: -15%;
-      width: 100vw;
-      height: 100vw;
-      background: radial-gradient(circle, rgba(127,0,255,0.45) 0%, transparent 70%);
-    }
-    .orb-2 {
-      bottom: -15%;
-      right: -15%;
-      width: 100vw;
-      height: 100vw;
-      background: radial-gradient(circle, rgba(0,242,254,0.35) 0%, transparent 70%);
-      animation-delay: -7s;
-    }
-    .orb-3 {
-      top: 40%;
-      left: 30%;
-      width: 70vw;
-      height: 70vw;
-      background: radial-gradient(circle, rgba(255,0,127,0.25) 0%, transparent 70%);
-      animation-duration: 18s;
-    }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-      50% { transform: translate(40px, 50px) scale(1.1) rotate(180deg); }
-      100% { transform: translate(-30px, 20px) scale(0.95) rotate(360deg); }
     }
 
     .app-viewport {
-      position: relative;
-      z-index: 1;
       display: flex;
       flex-direction: column;
       height: 100vh;
       height: 100dvh;
     }
 
-    /* Шапка */
     .top-bar {
       padding: 16px 20px;
       background: var(--bg-glass);
       backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
       border-bottom: 1px solid var(--border-glass);
       display: flex;
       justify-content: space-between;
@@ -113,27 +61,9 @@
     .logo {
       font-size: 20px;
       font-weight: 900;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 60%, var(--accent-purple) 100%);
+      background: linear-gradient(135deg, #fff, var(--accent-cyan));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-badge {
-      width: 12px;
-      height: 12px;
-      background: var(--accent-cyan);
-      border-radius: 50%;
-      box-shadow: var(--neon-cyan);
-      animation: pulse 2s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.4; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.25); }
     }
 
     .user-pill {
@@ -144,70 +74,21 @@
       padding: 8px 16px;
       border-radius: 30px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s;
     }
-    .user-pill:active { transform: scale(0.95); background: rgba(255,255,255,0.12); }
 
-    /* Рабочая область */
     .content-area {
       flex: 1;
       overflow-y: auto;
       padding: 20px;
       padding-bottom: 180px;
-      scroll-behavior: smooth;
     }
-    .content-area::-webkit-scrollbar { display: none; }
 
     .section-head {
       font-size: 18px;
       font-weight: 800;
-      margin: 22px 0 14px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      letter-spacing: -0.3px;
-    }
-    .section-head span { font-size: 12px; color: var(--accent-cyan); cursor: pointer; }
-
-    /* Сетка и Карточки */
-    .track-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
+      margin: 18px 0 12px 0;
     }
 
-    .cyber-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-lg);
-      padding: 12px;
-      transition: all 0.3s var(--ease-spring);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    .cyber-card:active { transform: scale(0.94); }
-    .cyber-card.active { border-color: var(--accent-cyan); box-shadow: var(--neon-cyan); }
-
-    .card-cover-wrap {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      position: relative;
-      margin-bottom: 10px;
-    }
-    .card-cover { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .cyber-card:hover .card-cover { transform: scale(1.08); }
-
-    .card-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-artist { font-size: 11px; color: var(--text-sub); margin-top: 3px; }
-
-    /* Список строк */
     .track-row {
       display: flex;
       align-items: center;
@@ -217,98 +98,25 @@
       border-radius: var(--radius-lg);
       padding: 10px 14px;
       margin-bottom: 10px;
-      backdrop-filter: blur(10px);
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .track-row:active { transform: scale(0.97); }
     .track-row.active {
       border-color: var(--accent-cyan);
-      background: rgba(0, 242, 254, 0.08);
       box-shadow: var(--neon-cyan);
     }
-    .row-cover { width: 50px; height: 50px; border-radius: var(--radius-md); object-fit: cover; }
+    .row-cover { width: 50px; height: 50px; border-radius: var(--radius-md); object-fit: cover; background: #111; }
     .row-meta { flex: 1; min-width: 0; }
     .row-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .row-artist { font-size: 12px; color: var(--text-sub); margin-top: 3px; }
 
-    .icon-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 6px;
-      display: grid;
-      place-items: center;
-      transition: transform 0.2s;
-    }
-    .icon-btn:active { transform: scale(0.8); }
-
-    /* Анимированный эквалайзер */
-    .eq-bar-wrap { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
-    .eq-bar { width: 3px; background: var(--accent-cyan); border-radius: 3px; animation: eqAnim 0.8s infinite alternate ease-in-out; }
-    .eq-bar:nth-child(2) { animation-delay: -0.2s; }
-    .eq-bar:nth-child(3) { animation-delay: -0.4s; }
-    @keyframes eqAnim { 0% { height: 20%; } 100% { height: 100%; } }
-
-    /* Экраны Авторизации */
-    .auth-card {
-      background: var(--bg-glass-heavy);
-      backdrop-filter: blur(40px);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius-xl);
-      padding: 30px;
-      max-width: 400px;
-      margin: 20px auto;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-      animation: slideUp 0.4s var(--ease-spring);
-    }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-    .auth-title { font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 24px; }
-    .field-group { margin-bottom: 16px; }
-    .field-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-    
-    .cyber-input {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-glass);
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-      transition: all 0.3s;
-    }
-    .cyber-input:focus { border-color: var(--accent-cyan); box-shadow: var(--neon-cyan); }
-
-    .cyber-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      border: none;
-      border-radius: var(--radius-md);
-      color: #fff;
-      font-weight: 800;
-      font-size: 15px;
-      cursor: pointer;
-      margin-top: 12px;
-      box-shadow: var(--neon-cyan);
-      transition: all 0.2s;
-    }
-    .cyber-btn:active { transform: scale(0.97); }
-
-    /* Мини плеер */
     .mini-player {
       position: fixed;
       bottom: 75px;
       left: 12px;
       right: 12px;
       height: 68px;
-      background: rgba(10, 8, 28, 0.88);
+      background: rgba(18, 18, 22, 0.95);
       backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
       border-radius: 22px;
       border: 1px solid var(--border-glass);
       display: flex;
@@ -316,15 +124,9 @@
       padding: 0 12px;
       gap: 12px;
       z-index: 90;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
       cursor: pointer;
-      animation: popIn 0.3s var(--ease-spring);
     }
-    @keyframes popIn { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-
-    .mini-cover { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; }
-    .mini-meta { flex: 1; min-width: 0; }
-    
+    .mini-cover { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; background: #111; }
     .play-circle {
       width: 44px;
       height: 44px;
@@ -333,14 +135,10 @@
       border: none;
       color: #fff;
       font-size: 16px;
-      display: grid;
-      place-items: center;
       cursor: pointer;
-      box-shadow: var(--neon-cyan);
       flex-shrink: 0;
     }
 
-    /* Навигация */
     .bottom-bar {
       position: fixed;
       bottom: 0;
@@ -349,7 +147,6 @@
       height: 65px;
       background: var(--bg-glass);
       backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
       border-top: 1px solid var(--border-glass);
       display: flex;
       justify-content: space-around;
@@ -365,74 +162,85 @@
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .nav-btn.active { color: var(--accent-cyan); text-shadow: var(--neon-cyan); }
-    .nav-btn span { font-size: 20px; }
+    .nav-btn.active { color: var(--accent-cyan); }
+    .nav-btn span { font-size: 18px; }
 
-    /* Полноэкранный плеер (Модальное окно) */
+    /* Полноэкранный плеер */
     .full-player {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--bg-dark);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #121214;
       z-index: 200;
       display: flex;
       flex-direction: column;
       padding: 24px;
       transform: translateY(100%);
-      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      transition: transform 0.4s ease;
     }
     .full-player.open { transform: translateY(0); }
 
-    .fp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .fp-cover-wrap { width: 85vw; max-width: 320px; aspect-ratio: 1; margin: 20px auto; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 20px 50px rgba(0, 242, 254, 0.2); border: 1px solid var(--border-glass); }
-    .fp-cover { width: 100%; height: 100%; object-fit: cover; }
+    .fp-header { display: flex; justify-content: space-between; align-items: center; }
+    .fp-cover-wrap { width: 80vw; max-width: 300px; aspect-ratio: 1; margin: 30px auto; border-radius: 20px; overflow: hidden; }
+    .fp-cover { width: 100%; height: 100%; object-fit: cover; background: #222; }
 
     .fp-meta { text-align: center; margin-bottom: 20px; }
     .fp-title { font-size: 22px; font-weight: 800; }
     .fp-artist { font-size: 14px; color: var(--text-sub); margin-top: 4px; }
 
-    /* Ползунки времени и громкости */
-    .progress-area { margin-bottom: 20px; }
-    .time-slider, .volume-slider {
-      width: 100%;
-      -webkit-appearance: none;
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.1);
-      outline: none;
-    }
-    .time-slider::-webkit-slider-thumb, .volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      box-shadow: var(--neon-cyan);
-      cursor: pointer;
-    }
+    .time-slider { width: 100%; -webkit-appearance: none; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); }
+    .time-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
 
     .time-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sub); margin-top: 8px; }
 
-    .fp-controls { display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 30px; }
+    .fp-controls { display: flex; justify-content: center; align-items: center; gap: 24px; margin: 20px 0; }
     .fp-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
-    .fp-btn-main { width: 64px; height: 64px; font-size: 24px; }
 
-    .volume-wrap { display: flex; align-items: center; gap: 12px; color: var(--text-sub); }
+    /* Админка и Формы */
+    .auth-card {
+      background: var(--bg-glass-heavy);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+    .cyber-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-glass);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .cyber-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .admin-badge {
+      background: #ff007f;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
+      margin-left: 6px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
   <div class="app-viewport">
     <div class="top-bar">
-      <div class="logo"><div class="logo-badge"></div>Mono.Music</div>
+      <div class="logo">Mono.Music</div>
       <div class="user-pill" id="user-pill" onclick="switchTab('auth')">👤 Войти</div>
     </div>
 
@@ -440,22 +248,18 @@
 
     <!-- Мини-плеер -->
     <div class="mini-player" id="mini-player" style="display:none;" onclick="openFullPlayer()">
-      <img class="mini-cover" id="m-cover" src="">
-      <div class="mini-meta">
+      <img class="mini-cover" id="m-cover" src="" onerror="handleCoverError(this)">
+      <div style="flex:1; min-width:0;">
         <div style="font-size:13px; font-weight:700;" id="m-title">-</div>
         <div style="font-size:11px; color:var(--text-sub);" id="m-artist">-</div>
-      </div>
-      <div id="m-eq" class="eq-bar-wrap" style="display:none;">
-        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
       </div>
       <button class="play-circle" id="m-play-btn" onclick="event.stopPropagation(); togglePlay()">▶</button>
     </div>
 
     <!-- Навигация -->
-    <div class="bottom-bar">
+    <div class="bottom-bar" id="bottom-bar">
       <div class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span>⚡</span>Главная</div>
       <div class="nav-btn" data-tab="favs" onclick="switchTab('favs')"><span>❤️</span>Избранное</div>
-      <div class="nav-btn" data-tab="offline" onclick="switchTab('offline')"><span>💾</span>Оффлайн</div>
       <div class="nav-btn" data-tab="auth" onclick="switchTab('auth')"><span>👤</span>Профиль</div>
     </div>
   </div>
@@ -469,7 +273,7 @@
     </div>
     
     <div class="fp-cover-wrap">
-      <img class="fp-cover" id="fp-cover" src="">
+      <img class="fp-cover" id="fp-cover" src="" onerror="handleCoverError(this)">
     </div>
 
     <div class="fp-meta">
@@ -477,7 +281,7 @@
       <div class="fp-artist" id="fp-artist">-</div>
     </div>
 
-    <div class="progress-area">
+    <div>
       <input type="range" class="time-slider" id="fp-progress" value="0" min="0" max="100" oninput="seekAudio(this.value)">
       <div class="time-labels">
         <span id="fp-curr-time">0:00</span>
@@ -487,31 +291,22 @@
 
     <div class="fp-controls">
       <button class="fp-btn" onclick="prevTrack()">⏮</button>
-      <button class="play-circle fp-btn-main" id="fp-play-btn" onclick="togglePlay()">▶</button>
+      <button class="play-circle" style="width:60px; height:60px;" id="fp-play-btn" onclick="togglePlay()">▶</button>
       <button class="fp-btn" onclick="nextTrack()">⏭</button>
-    </div>
-
-    <div class="volume-wrap">
-      <span>🔈</span>
-      <input type="range" class="volume-slider" id="fp-volume" value="100" min="0" max="100" oninput="setVolume(this.value)">
-      <span>🔊</span>
     </div>
   </div>
 
   <script>
-    // Регистрация ServiceWorker для Оффлайн-режима
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    }
-
     const audio = new Audio();
-    audio.loop = false;
 
-    // Конфигурация GitHub-репозитория
+    // GitHub Конфигурация
     const GITHUB_USER = 'bomba33345-sudo';
     const GITHUB_REPO = 'frame.github.io';
     const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/assets/`;
     const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/assets`;
+
+    // Запасные аватарки для обложек, если файла обложки нет на GitHub
+    const FALLBACK_COVER = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%237f00ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2300f2fe" font-size="30">🎵</text></svg>';
 
     let appState = {
       user: JSON.parse(localStorage.getItem('mono_user')) || null,
@@ -522,11 +317,37 @@
       tracks: []
     };
 
-    // Автоматическая подгрузка треков из GitHub API
+    // Функция поиска картинок (.png, .jpg, .webp)
+    function getCoverVariants(baseName) {
+      return [
+        GITHUB_RAW_BASE + baseName + '.png',
+        GITHUB_RAW_BASE + baseName + '.jpg',
+        GITHUB_RAW_BASE + baseName + '.jpeg',
+        GITHUB_RAW_BASE + baseName + '.webp'
+      ];
+    }
+
+    // Обработка ошибки загрузки обложки (перебор расширений -> фоллбек)
+    function handleCoverError(imgElement) {
+      const attempts = parseInt(imgElement.getAttribute('data-attempt') || '0');
+      const baseName = imgElement.getAttribute('data-basename');
+      
+      if (baseName) {
+        const variants = getCoverVariants(baseName);
+        if (attempts < variants.length - 1) {
+          imgElement.setAttribute('data-attempt', attempts + 1);
+          imgElement.src = variants[attempts + 1];
+          return;
+        }
+      }
+      imgElement.src = FALLBACK_COVER;
+    }
+
+    // Авто-загрузка файлов из GitHub API
     async function loadTracksFromGitHub() {
       try {
         const res = await fetch(GITHUB_API_URL);
-        if (!res.ok) throw new Error('API limits');
+        if (!res.ok) throw new Error('API Error');
         const files = await res.json();
         
         const audioFiles = files.filter(f => f.name.endsWith('.mp3') || f.name.endsWith('.wav'));
@@ -537,49 +358,41 @@
             return {
               id: String(idx + 1),
               title: baseName.replace(/_/g, ' '),
-              artist: 'GitHub Asset',
+              artist: 'GitHub Track',
               src: file.download_url,
-              cover: GITHUB_RAW_BASE + baseName + '.jpg'
+              baseName: baseName,
+              cover: GITHUB_RAW_BASE + baseName + '.png' // По умолчанию запрашиваем PNG
             };
           });
-        } else {
-          useFallbackTracks();
         }
       } catch (e) {
-        console.warn("GitHub API не отвечает, переключаемся на заготовленный список assets", e);
-        useFallbackTracks();
+        console.warn("Ошибка подгрузки с GitHub API. Используются локальные данные.");
       }
       render();
     }
 
-    function useFallbackTracks() {
-      appState.tracks = [
-        { id: '1', title: 'Song 1', artist: 'Artist 1', src: GITHUB_RAW_BASE + 'song1.mp3', cover: GITHUB_RAW_BASE + 'cover1.jpg' },
-        { id: '2', title: 'Song 2', artist: 'Artist 2', src: GITHUB_RAW_BASE + 'song2.mp3', cover: GITHUB_RAW_BASE + 'cover2.jpg' }
-      ];
-    }
-
-    /* РЕНДЕРИНГ ЭКРАНОВ */
     function render() {
       const view = document.getElementById('main-content');
       const userPill = document.getElementById('user-pill');
-      userPill.textContent = appState.user ? `👤 ${appState.user.name}` : '👤 Войти';
+      
+      if (appState.user) {
+        userPill.innerHTML = `👤 ${appState.user.name} ${appState.user.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}`;
+      } else {
+        userPill.textContent = '👤 Войти';
+      }
+
+      // Обновляем панель навигации (показываем кнопку админки если admin)
+      const bottomBar = document.getElementById('bottom-bar');
+      bottomBar.innerHTML = `
+        <div class="nav-btn ${appState.currentTab === 'home' ? 'active' : ''}" onclick="switchTab('home')"><span>⚡</span>Главная</div>
+        <div class="nav-btn ${appState.currentTab === 'favs' ? 'active' : ''}" onclick="switchTab('favs')"><span>❤️</span>Избранное</div>
+        ${appState.user && appState.user.isAdmin ? `<div class="nav-btn ${appState.currentTab === 'admin' ? 'active' : ''}" onclick="switchTab('admin')"><span>⚙️</span>Админка</div>` : ''}
+        <div class="nav-btn ${appState.currentTab === 'auth' ? 'active' : ''}" onclick="switchTab('auth')"><span>👤</span>Профиль</div>
+      `;
 
       if (appState.currentTab === 'home') {
         view.innerHTML = `
-          <div class="section-head">Тренды GitHub Assets 🔥 <span>Все</span></div>
-          <div class="track-grid">
-            ${appState.tracks.map(t => `
-              <div class="cyber-card ${appState.currentTrack && appState.currentTrack.id === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
-                <div class="card-cover-wrap">
-                  <img class="card-cover" src="${t.cover}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500'">
-                </div>
-                <div class="card-title">${t.title}</div>
-                <div class="card-artist">${t.artist}</div>
-              </div>
-            `).join('')}
-          </div>
-          <div class="section-head">Все Треки (${appState.tracks.length})</div>
+          <div class="section-head">Все треки (${appState.tracks.length})</div>
           ${renderTrackRows(appState.tracks)}
         `;
       } 
@@ -587,58 +400,60 @@
         if (appState.user) {
           view.innerHTML = `
             <div class="auth-card">
-              <div class="auth-title">Профиль: ${appState.user.name}</div>
-              <p style="text-align:center; color:var(--text-sub); margin-bottom:20px; font-size:13px;">Синхронизация активна. Доступ к оффлайн трекам разрешен.</p>
-              <button class="cyber-btn" style="background:linear-gradient(135deg, #ff007f, var(--accent-purple));" onclick="logout()">Выйти из аккаунта</button>
+              <h2 style="margin-bottom:12px;">Профиль: ${appState.user.name}</h2>
+              <p style="color:var(--text-sub); font-size:13px; margin-bottom:20px;">Роль: ${appState.user.isAdmin ? 'Администратор' : 'Пользователь'}</p>
+              <button class="cyber-btn" style="background:#ff007f;" onclick="logout()">Выйти</button>
             </div>
           `;
         } else {
           view.innerHTML = `
             <div class="auth-card">
-              <div class="auth-title">Вход / Регистрация</div>
-              <div class="field-group">
-                <label>Никнейм или Email</label>
-                <input class="cyber-input" id="auth-name" placeholder="cyber_user">
-              </div>
-              <div class="field-group">
-                <label>Пароль</label>
-                <input class="cyber-input" type="password" id="auth-pass" placeholder="••••••••">
-              </div>
-              <button class="cyber-btn" onclick="login()">Продолжить</button>
+              <h2 style="margin-bottom:16px; text-align:center;">Авторизация</h2>
+              <input class="cyber-input" id="auth-name" placeholder="Логин (например: admin)">
+              <input class="cyber-input" type="password" id="auth-pass" placeholder="Пароль (например: admin123)">
+              <button class="cyber-btn" onclick="login()">Войти</button>
             </div>
           `;
         }
       }
+      else if (appState.currentTab === 'admin') {
+        view.innerHTML = `
+          <div class="auth-card" style="max-width:100%;">
+            <h2>⚙️ Панель администратора</h2>
+            <p style="color:var(--text-sub); font-size:12px; margin: 10px 0 20px 0;">Добавление новых треков напрямую в список:</p>
+            
+            <input class="cyber-input" id="adm-title" placeholder="Название трека">
+            <input class="cyber-input" id="adm-artist" placeholder="Исполнитель">
+            <input class="cyber-input" id="adm-src" placeholder="Прямая ссылка на MP3/WAV">
+            <input class="cyber-input" id="adm-cover" placeholder="Ссылка на обложку (PNG/JPG)">
+            
+            <button class="cyber-btn" onclick="adminAddTrack()">Добавить трек</button>
+          </div>
+        `;
+      }
       else if (appState.currentTab === 'favs') {
         const favList = appState.tracks.filter(t => appState.favorites.includes(t.id));
-        view.innerHTML = `<div class="section-head">Избранное ❤️ (${favList.length})</div>${renderTrackRows(favList)}`;
-      }
-      else if (appState.currentTab === 'offline') {
-        view.innerHTML = `
-          <div class="section-head">Оффлайн кэш 💾</div>
-          <p style="color:var(--text-sub); font-size:12px; margin-bottom:15px; line-height:1.4;">Все прослушанные треки автоматически сохраняются ServiceWorker и запускаются без подключения к интернету.</p>
-          ${renderTrackRows(appState.tracks)}
-        `;
+        view.innerHTML = `<div class="section-head">Избранное (${favList.length})</div>${renderTrackRows(favList)}`;
       }
     }
 
     function renderTrackRows(list) {
-      if (!list.length) return `<div style="color:var(--text-sub); text-align:center; padding:40px; font-size:13px;">Список пуст</div>`;
+      if (!list.length) return `<div style="color:var(--text-sub); padding:30px; text-align:center;">Список пуст</div>`;
       return list.map(t => `
         <div class="track-row ${appState.currentTrack && appState.currentTrack.id === t.id ? 'active' : ''}" onclick="playTrack('${t.id}')">
-          <img class="row-cover" src="${t.cover}" onerror="this.src='https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500'">
+          <img class="row-cover" src="${t.cover}" data-basename="${t.baseName || ''}" data-attempt="0" onerror="handleCoverError(this)">
           <div class="row-meta">
             <div class="row-title">${t.title}</div>
             <div class="row-artist">${t.artist}</div>
           </div>
-          <button class="icon-btn" onclick="event.stopPropagation(); toggleFav('${t.id}')">
+          <button style="background:none; border:none; color:#fff;" onclick="event.stopPropagation(); toggleFav('${t.id}')">
             ${appState.favorites.includes(t.id) ? '❤️' : '♡'}
           </button>
         </div>
       `).join('');
     }
 
-    /* ЛОГИКА ПЛЕЕРА И АУДИО */
+    /* ПЛЕЕР */
     function playTrack(id) {
       const t = appState.tracks.find(x => x.id === id); 
       if (!t) return;
@@ -646,50 +461,47 @@
       audio.src = t.src;
       audio.play().then(() => {
         appState.isPlaying = true;
-        setupMediaSession(t);
         updatePlayerUI();
-      }).catch(e => console.log("Фоновый режим готов к воспроизведению"));
+      }).catch(e => console.log("Ошибка воспроизведения"));
     }
 
     function togglePlay() {
       if (!appState.currentTrack && appState.tracks.length) return playTrack(appState.tracks[0].id);
-      if (appState.isPlaying) { 
-        audio.pause(); 
-        appState.isPlaying = false; 
-      } else { 
-        audio.play(); 
-        appState.isPlaying = true; 
-      }
+      if (appState.isPlaying) { audio.pause(); appState.isPlaying = false; } 
+      else { audio.play(); appState.isPlaying = true; }
       updatePlayerUI();
     }
 
     function nextTrack() {
       if (!appState.currentTrack) return;
-      const currIdx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
-      const nextIdx = (currIdx + 1) % appState.tracks.length;
-      playTrack(appState.tracks[nextIdx].id);
+      const idx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
+      playTrack(appState.tracks[(idx + 1) % appState.tracks.length].id);
     }
 
     function prevTrack() {
       if (!appState.currentTrack) return;
-      const currIdx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
-      const prevIdx = (currIdx - 1 + appState.tracks.length) % appState.tracks.length;
-      playTrack(appState.tracks[prevIdx].id);
+      const idx = appState.tracks.findIndex(t => t.id === appState.currentTrack.id);
+      playTrack(appState.tracks[(idx - 1 + appState.tracks.length) % appState.tracks.length].id);
     }
 
     function updatePlayerUI() {
       if (!appState.currentTrack) return;
-      
-      // Обновление мини-плеера
       document.getElementById('mini-player').style.display = 'flex';
-      document.getElementById('m-cover').src = appState.currentTrack.cover;
+      
+      const mCover = document.getElementById('m-cover');
+      mCover.setAttribute('data-basename', appState.currentTrack.baseName || '');
+      mCover.setAttribute('data-attempt', '0');
+      mCover.src = appState.currentTrack.cover;
+
       document.getElementById('m-title').textContent = appState.currentTrack.title;
       document.getElementById('m-artist').textContent = appState.currentTrack.artist;
       document.getElementById('m-play-btn').textContent = appState.isPlaying ? '⏸' : '▶';
-      document.getElementById('m-eq').style.display = appState.isPlaying ? 'flex' : 'none';
 
-      // Обновление полноэкранного плеера
-      document.getElementById('fp-cover').src = appState.currentTrack.cover;
+      const fpCover = document.getElementById('fp-cover');
+      fpCover.setAttribute('data-basename', appState.currentTrack.baseName || '');
+      fpCover.setAttribute('data-attempt', '0');
+      fpCover.src = appState.currentTrack.cover;
+
       document.getElementById('fp-title').textContent = appState.currentTrack.title;
       document.getElementById('fp-artist').textContent = appState.currentTrack.artist;
       document.getElementById('fp-play-btn').textContent = appState.isPlaying ? '⏸' : '▶';
@@ -698,26 +510,56 @@
       render();
     }
 
-    /* ТАЙМЕРЫ И ПОЛЗУНКИ */
+    /* АВТОРИЗАЦИЯ ДЛЯ ТЕСТ УЗЕРА ADMIN / ADMIN123 */
+    function login() {
+      const userVal = document.getElementById('auth-name').value.trim();
+      const passVal = document.getElementById('auth-pass').value.trim();
+
+      if (!userVal) return alert('Введите имя!');
+
+      const isAdmin = (userVal === 'admin' && passVal === 'admin123');
+
+      appState.user = { name: userVal, isAdmin: isAdmin };
+      localStorage.setItem('mono_user', JSON.stringify(appState.user));
+      render();
+    }
+
+    function logout() {
+      appState.user = null;
+      localStorage.removeItem('mono_user');
+      switchTab('home');
+    }
+
+    function adminAddTrack() {
+      const title = document.getElementById('adm-title').value.trim();
+      const artist = document.getElementById('adm-artist').value.trim() || 'Admin';
+      const src = document.getElementById('adm-src').value.trim();
+      const cover = document.getElementById('adm-cover').value.trim();
+
+      if (!title || !src) return alert('Укажите название и ссылку на mp3');
+
+      const newTrack = {
+        id: String(Date.now()),
+        title,
+        artist,
+        src,
+        cover: cover || FALLBACK_COVER
+      };
+
+      appState.tracks.unshift(newTrack);
+      alert('Трек успешно добавлен в список!');
+      switchTab('home');
+    }
+
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
-      const pct = (audio.currentTime / audio.duration) * 100;
-      document.getElementById('fp-progress').value = pct;
+      document.getElementById('fp-progress').value = (audio.currentTime / audio.duration) * 100;
       document.getElementById('fp-curr-time').textContent = formatTime(audio.currentTime);
       document.getElementById('fp-dur-time').textContent = formatTime(audio.duration);
     };
 
-    audio.onended = () => {
-      nextTrack();
-    };
-
     function seekAudio(val) {
-      if (!audio.duration) return;
-      audio.currentTime = (val / 100) * audio.duration;
-    }
-
-    function setVolume(val) {
-      audio.volume = val / 100;
+      if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
     }
 
     function formatTime(sec) {
@@ -726,50 +568,15 @@
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    /* МОДАЛЬНЫЙ ПЛЕЕР */
-    function openFullPlayer() {
-      document.getElementById('full-player').classList.add('open');
-    }
-    function closeFullPlayer() {
-      document.getElementById('full-player').classList.remove('open');
-    }
-
-    /* УПРАВЛЕНИЕ МЕДИАСЕССИЕЙ НА ЭКРАНЕ БЛОКИРОВКИ */
-    function setupMediaSession(track) {
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: track.title,
-          artist: track.artist,
-          artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
-        });
-        navigator.mediaSession.setActionHandler('play', () => togglePlay());
-        navigator.mediaSession.setActionHandler('pause', () => togglePlay());
-        navigator.mediaSession.setActionHandler('previoustrack', () => prevTrack());
-        navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
-      }
-    }
-
-    /* АВТОРИЗАЦИЯ И ИЗБРАННОЕ */
-    function login() {
-      const name = document.getElementById('auth-name').value.trim();
-      if (!name) return alert('Введите ваш логин');
-      appState.user = { name };
-      localStorage.setItem('mono_user', JSON.stringify(appState.user));
-      render();
-    }
-
-    function logout() {
-      appState.user = null;
-      localStorage.removeItem('mono_user');
-      render();
-    }
+    function openFullPlayer() { document.getElementById('full-player').classList.add('open'); }
+    function closeFullPlayer() { document.getElementById('full-player').classList.remove('open'); }
 
     function toggleFav(id) {
       const idx = appState.favorites.indexOf(id);
       if (idx > -1) appState.favorites.splice(idx, 1);
       else appState.favorites.push(id);
       localStorage.setItem('mono_favs', JSON.stringify(appState.favorites));
-      updatePlayerUI();
+      render();
     }
 
     function toggleFavCurrent() {
@@ -778,12 +585,9 @@
 
     function switchTab(tab) {
       appState.currentTab = tab;
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
       render();
     }
 
-    // Инициализация
     loadTracksFromGitHub();
   </script>
 </body>
