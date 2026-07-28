@@ -1,0 +1,6 @@
+{
+  "appId": "com.mono.music",
+  "appName": "Mono Music",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
